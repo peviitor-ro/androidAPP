@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import {
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  Dimensions
+} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import AppNavigator from './navigation/AppNavigator';
+import Header from './components/Header';
+
+const cover = require('./assets/images/cover.png');
 
 export default function App() {
+  const height = Dimensions.get('window').height;
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ImageBackground source={cover} style={styles.container} resizeMode="cover">
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scrollViewContainer}
+        enableOnAndroid={true}
+        extraScrollHeight={-height}
+        keyboardShouldPersistTaps="handled"
+        enableAutomaticScroll
+        style={styles.container}
+      >
+        <SafeAreaView style={styles.container}>
+          <Header />
+          <AppNavigator />
+        </SafeAreaView>
+      </KeyboardAwareScrollView>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexGrow: 1,
+  },
+  scrollViewContainer: {
+    flexGrow: 1,
   },
 });
