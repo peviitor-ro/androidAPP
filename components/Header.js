@@ -1,9 +1,13 @@
 import { View, StyleSheet, Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Logo from '../assets/svg/Logo';
 
 export default function Header() {
+  const navigation = useNavigation();
   return (
-    <View style={styles.container}>
+    <View style={styles.container} 
+      onTouchStart={() => navigation.navigate('Home')}
+    >
       <Logo />
     </View>
   );

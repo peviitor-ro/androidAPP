@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AppNavigator from './navigation/AppNavigator';
-import Header from './components/Header';
 
 const cover = require('./assets/images/cover.png');
 
@@ -26,7 +25,6 @@ export default function App() {
         style={styles.container}
       >
         <SafeAreaView style={styles.container}>
-          <Header />
           <AppNavigator />
         </SafeAreaView>
       </KeyboardAwareScrollView>
