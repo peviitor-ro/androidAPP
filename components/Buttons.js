@@ -1,26 +1,7 @@
 import { Text, Pressable, StyleSheet } from 'react-native';
 import COLORS from '../constants/COLORS';
 
-export default function CustomButton({ title, onPress }) {
-  return (
-    <Pressable
-      style={({ pressed }) => [
-        {
-          backgroundColor: pressed
-            ? COLORS.button_pressed
-            : COLORS.background_green,
-        },
-        styles.button,
-      ]}
-      onPress={onPress}
-    >
-      <Text style={styles.buttonText}>{title}</Text>
-    </Pressable>
-  );
-}
-
-
-const styles = StyleSheet.create({
+const defaultStyles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -34,4 +15,13 @@ const styles = StyleSheet.create({
   },
 });
 
+export default function CustomButton({ ...props }) {
+  const { title, onPress } = props;
+  const style = props.style || {};
 
+  return (
+    <Pressable style={[defaultStyles.button, style.button]} onPress={onPress}>
+      <Text style={[defaultStyles.buttonText, style.buttonText]}>{title}</Text>
+    </Pressable>
+  );
+}
