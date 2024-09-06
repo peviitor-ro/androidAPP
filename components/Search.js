@@ -104,9 +104,24 @@ export default function Search({ ...props }) {
                 navigation.navigate('Results');
               }}
             >
-              <View>
+              <View
+                style={{
+                  padding: 10,
+                  backgroundColor:
+                    index % 2 === 0 ? COLORS.white : COLORS.border_grey,
+                }}
+              >
                 <Text
-                  style={[defaultStyles.dropdownText, style.dropdownText]}
+                  style={[
+                    defaultStyles.dropdownText,
+                    style.dropdownText,
+                    {
+                      color:
+                        index % 2 === 0
+                          ? COLORS.background_green
+                          : COLORS.white,
+                    },
+                  ]}
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
@@ -142,6 +157,7 @@ const defaultStyles = StyleSheet.create({
     paddingLeft: 40,
     width: '100%',
     backgroundColor: COLORS.white,
+    color: COLORS.background_green,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -153,7 +169,6 @@ const defaultStyles = StyleSheet.create({
     zIndex: 1,
   },
   dropdown: {
-    gap: 10,
     zIndex: 1,
     paddingBottom: 30,
   },
