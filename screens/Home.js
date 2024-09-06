@@ -1,6 +1,7 @@
 import { StyleSheet, ScrollView } from 'react-native';
 import { useState, useEffect } from 'react';
 import { total } from '../services/landing/landing.service';
+import Background from '../components/Background';
 import About from '../components/About';
 import Search from '../components/Search';
 import Racheta from '../assets/svg/Racheta';
@@ -13,13 +14,16 @@ export default function Home() {
   }, []);
 
   return (
-    <ScrollView 
-      contentContainerStyle={styles.container}
-    style={styles.scrollView}>
+    <Background>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        style={styles.scrollView}
+      >
         <About jobs={jobs} />
         <Search />
         <Racheta style={styles.svg} />
-    </ScrollView>
+      </ScrollView>
+    </Background>
   );
 }
 

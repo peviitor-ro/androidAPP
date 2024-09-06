@@ -1,35 +1,27 @@
-import React from 'react';
-import {
-  ImageBackground,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  Dimensions
-} from 'react-native';
+import { SafeAreaView, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { LinearGradient } from 'expo-linear-gradient';
 import AppNavigator from './navigation/AppNavigator';
-
-const cover = require('./assets/images/cover.png');
 
 export default function App() {
   const height = Dimensions.get('window').height;
   return (
-    <ImageBackground source={cover} style={styles.container} resizeMode="cover">
+    <LinearGradient colors={['#d0e7f2', '#f6f0ec']} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.scrollViewContainer}
-        enableOnAndroid={true}
-        extraScrollHeight={-height}
-        keyboardShouldPersistTaps="handled"
-        enableAutomaticScroll
-        style={styles.container}
-      >
-        <SafeAreaView style={styles.container}>
-          <AppNavigator />
-        </SafeAreaView>
-      </KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+          contentContainerStyle={styles.scrollViewContainer}
+          enableOnAndroid={true}
+          extraScrollHeight={-height}
+          keyboardShouldPersistTaps="handled"
+          enableAutomaticScroll
+          style={styles.container}
+        >
+          <SafeAreaView style={styles.container}>
+            <AppNavigator />
+          </SafeAreaView>
+        </KeyboardAwareScrollView>
       </ScrollView>
-    </ImageBackground>
+    </LinearGradient>
   );
 }
 

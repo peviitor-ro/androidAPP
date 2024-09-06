@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -6,26 +7,23 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
-import { useState, useEffect } from 'react';
 import { useJobsInfiniteQuery } from '../landing/landing.queries';
 import { useNavigation } from '@react-navigation/native';
 import useJobStore from '../store/jobs.state';
 import CustomButton from './Buttons';
 import SearchIcon from '../assets/svg/SearchIcon';
 import Dropdown from './Dropdown';
-
 import COLORS from '../constants/COLORS';
 
 export default function Search({ ...props }) {
   const style = props.style || {};
 
   const navigation = useNavigation();
-
   const { jobs, search, setSearch, setJobs } = useJobStore();
   const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useJobsInfiniteQuery(search);
 
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const handleOnChange = (text) => {
@@ -51,8 +49,7 @@ export default function Search({ ...props }) {
   }, [search, status, data]);
 
   const handleScroll = ({ nativeEvent }) => {
-    const isScrolledToEnd = isCloseToBottom(nativeEvent);
-    if (isScrolledToEnd && hasNextPage && !isFetchingNextPage) {
+    if (isCloseToBottom(nativeEvent) && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
@@ -69,6 +66,8 @@ export default function Search({ ...props }) {
     );
   };
 
+  const uniqueJobs = Array.from(new Set(jobs.map((job) => job.job_title)));
+
   return (
     <View style={[defaultStyles.container, style.container]}>
       <View style={[defaultStyles.inputContainer, style.inputContainer]}>
@@ -83,9 +82,7 @@ export default function Search({ ...props }) {
       <CustomButton
         style={style}
         title="Caută"
-        onPress={() => {
-          navigation.navigate('Results');
-        }}
+        onPress={() => navigation.navigate('Results')}
       />
       {loading ? (
         <ActivityIndicator
@@ -99,21 +96,21 @@ export default function Search({ ...props }) {
           style={{ dropdown: [defaultStyles.dropdown, style.dropdown] }}
           onScroll={handleScroll}
         >
-          {jobs.map((job, index) => (
+          {uniqueJobs.map((job, index) => (
             <Pressable
               key={index}
               onPress={() => {
-                setSearch(job.job_title);
+                setSearch(job);
                 navigation.navigate('Results');
               }}
             >
-              <View key={index}>
+              <View>
                 <Text
                   style={[defaultStyles.dropdownText, style.dropdownText]}
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {job.job_title}
+                  {job}
                 </Text>
               </View>
             </Pressable>
@@ -122,9 +119,7 @@ export default function Search({ ...props }) {
             <ActivityIndicator
               size="small"
               color={COLORS.background_green}
-              style={{
-                marginBottom: 20,
-              }}
+              style={{ marginBottom: 20 }}
             />
           ) : null}
         </Dropdown>
@@ -146,6 +141,7 @@ const defaultStyles = StyleSheet.create({
     borderRadius: 5,
     paddingLeft: 40,
     width: '100%',
+    backgroundColor: COLORS.white,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -154,6 +150,7 @@ const defaultStyles = StyleSheet.create({
   icon: {
     position: 'absolute',
     left: 10,
+    zIndex: 1,
   },
   dropdown: {
     gap: 10,
@@ -164,7 +161,6 @@ const defaultStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-
   indicator: {
     marginTop: 10,
     position: 'absolute',

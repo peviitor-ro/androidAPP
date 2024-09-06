@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,8 +8,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useJobsInfiniteQuery } from '../landing/landing.queries';
+import NoResults from './NoResults';
 import Web from './Web';
-import { useEffect, useState } from 'react';
 import useJobStore from '../store/jobs.state';
 import CustomButton from './Buttons';
 import Map from '../assets/svg/Map';
@@ -26,11 +27,10 @@ export default function Card() {
 
   useEffect(() => {
     switch (true) {
-      case status === 'pending' :
+      case status === 'pending':
         setLoading(true);
         break;
-      case status === 'success' &&
-        data.pages[0].results.length > 0:
+      case status === 'success' && data.pages[0].results.length > 0:
         setJobs([...data.pages.map((page) => page.results).flat()]);
         setLoading(false);
         break;
@@ -61,7 +61,8 @@ export default function Card() {
   const handlePress = (index) => {
     setUrl(jobs[index].job_link);
     setShowWebView(true);
-  }
+  };
+
   return (
     <View
       style={{
@@ -72,7 +73,7 @@ export default function Card() {
         borderColor: COLORS.background_green,
       }}
     >
-      <View style={{ flex: 1, justifyContent: 'center', zIndex: -1 }}>
+      <View style={{ flexGrow: 1, justifyContent: 'center', zIndex: -1 }}>
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,
@@ -91,16 +92,14 @@ export default function Card() {
                 marginTop: 50,
               }}
             />
-          ) : (
+          ) : data?.pages[0].results.length > 0 ? (
             jobs.map((job, index) => (
               <View key={index} style={styles.container}>
-                {
-                  job.logo[0] ? (
-                    <Image source={{ uri: job.logo[0] }} style={styles.logo} />
-                  ) : (
-                    <NoImage style={styles.noImage} />
-                  )
-                }
+                {job.logo ? (
+                  <Image source={{ uri: job.logo[0] }} style={styles.logo} />
+                ) : (
+                  <NoImage style={styles.noImage} />
+                )}
                 <View style={{ flex: 1 }}>
                   <Text
                     style={styles.company}
@@ -133,13 +132,16 @@ export default function Card() {
                 />
               </View>
             ))
+          ) : (
+            <NoResults />
           )}
+
           {isFetchingNextPage ? (
             <ActivityIndicator
               size="small"
               color={COLORS.background_green}
               style={{
-                marginBottom: 20,
+                marginBottom: 100,
               }}
             />
           ) : null}
@@ -194,6 +196,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   button: {
-    backgroundColor: "red",
+    backgroundColor: 'red',
   },
 });
