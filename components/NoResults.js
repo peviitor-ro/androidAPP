@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import Strut from '../assets/svg/Strut';
-import COLORS from "../constants/COLORS";
+import COLORS from '../constants/COLORS';
 
 export default function NoResults() {
   return (
@@ -9,11 +9,12 @@ export default function NoResults() {
       <Strut style={styles.svg} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: '100%',
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
@@ -27,5 +28,3 @@ const styles = StyleSheet.create({
     color: COLORS.background_green,
   },
 });
-
-
