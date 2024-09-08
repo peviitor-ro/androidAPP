@@ -25,11 +25,11 @@ function BottomTabs() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Home') {
+          if (route.name === 'Acasă') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Results') {
+          } else if (route.name === 'Rezultate') {
             iconName = focused ? 'list' : 'list-outline';
-          } else if (route.name === 'Filter') {
+          } else if (route.name === 'Filtre') {
             iconName = focused ? 'filter' : 'filter-outline';
           }
 
@@ -39,9 +39,9 @@ function BottomTabs() {
         tabBarInactiveTintColor: 'gray',
       })}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Results" component={Results} />
-      <Tab.Screen name="Filter" component={Filter} />
+      <Tab.Screen name="Acasă" component={Home} />
+      <Tab.Screen name="Rezultate" component={Results} />
+      <Tab.Screen name="Filtre" component={Filter} />
     </Tab.Navigator>
   );
 }
@@ -52,7 +52,7 @@ export default function AppNavigator() {
       <NavigationContainer>
         <Header />
         <Stack.Navigator
-          initialRouteName="Home"
+          initialRouteName="Acasă"
           screenOptions={{
             headerShown: false,
           }}
