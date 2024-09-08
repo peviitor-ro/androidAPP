@@ -2,7 +2,7 @@
   "expo": {
     "name": "PeViitor",
     "slug": "Peviitor_native_app",
-    "version": "1.0.1",
+    "version": "1.3.3",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
