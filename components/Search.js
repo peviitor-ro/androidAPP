@@ -19,9 +19,10 @@ export default function Search({ ...props }) {
   const style = props.style || {};
 
   const navigation = useNavigation();
-  const { jobs, search, setSearch, setJobs } = useJobStore();
+  const { jobs, search, setSearch, setJobs, cities, counties, remote } =
+    useJobStore();
   const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useJobsInfiniteQuery(search);
+    useJobsInfiniteQuery(search, cities, counties, remote);
 
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -46,7 +47,7 @@ export default function Search({ ...props }) {
         setLoading(false);
         setVisible(false);
     }
-  }, [search, status, data]);
+  }, [search, cities, counties, remote, status, data]);
 
   const handleScroll = ({ nativeEvent }) => {
     if (isCloseToBottom(nativeEvent) && hasNextPage && !isFetchingNextPage) {
@@ -82,7 +83,7 @@ export default function Search({ ...props }) {
       <CustomButton
         style={style}
         title="Caută"
-        onPress={() => navigation.navigate('Results')}
+        onPress={() => navigation.navigate('Rezultate')}
       />
       {loading ? (
         <ActivityIndicator
@@ -101,7 +102,7 @@ export default function Search({ ...props }) {
               key={index}
               onPress={() => {
                 setSearch(job);
-                navigation.navigate('Results');
+                navigation.navigate('Rezultate');
               }}
             >
               <View

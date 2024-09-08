@@ -16,10 +16,34 @@ import Map from '../assets/svg/Map';
 import COLORS from '../constants/COLORS';
 import NoImage from '../assets/svg/NoImage';
 
+function typeTranslate(type) {
+  const typesList = type.split(',');
+  const types = typesList.map((type) => {
+    switch (type.toLowerCase()) {
+      case 'remote':
+        return 'Remote';
+      case 'hybrid':
+        return 'Hibrid';
+      case 'on-site':
+        return 'La fața locului';
+      default:
+        return 'Necunoscut';
+    }
+  });
+  return types.join(', ');
+}
+
+function refomatCity(city, county) {
+  if (city.includes('all')) {
+    return 'Tot Judetul ' + county;
+  }
+  return city;
+}
+
 export default function Card() {
-  const { jobs, search, setJobs } = useJobStore();
+  const { jobs, search, setJobs, cities, counties, remote } = useJobStore();
   const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useJobsInfiniteQuery(search);
+    useJobsInfiniteQuery(search, cities, counties, remote);
 
   const [loading, setLoading] = useState();
   const [url, setUrl] = useState('');
@@ -37,7 +61,7 @@ export default function Card() {
       default:
         setLoading(false);
     }
-  }, [search, status, data]);
+  }, [search, cities, counties, remote, status, data]);
 
   const handleScroll = ({ nativeEvent }) => {
     const isScrolledToEnd = isCloseToBottom(nativeEvent);
@@ -77,8 +101,11 @@ export default function Card() {
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
             justifyContent: 'center',
             alignItems: 'center',
+            paddingBottom: 100,
           }}
           scrollEnabled={true}
           nestedScrollEnabled={true}
@@ -116,15 +143,42 @@ export default function Card() {
                     {job.job_title}
                   </Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Map />
-                  <Text
-                    style={styles.location}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    {job.city}
-                  </Text>
+                <View style={{ flex: 1, flexDirection: 'column', gap: 5 }}>
+                  {job.city ? (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 5,
+                      }}
+                    >
+                      <Map />
+                      <Text
+                        style={styles.location}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {refomatCity(job.city, job.county)}
+                      </Text>
+                    </View>
+                  ) : null}
+                  {job.remote ? (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 5,
+                      }}
+                    >
+                      <Text
+                        style={styles.location}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        Tipul Jobului: {typeTranslate(job.remote)}
+                      </Text>
+                    </View>
+                  ) : null}
                 </View>
                 <CustomButton
                   title="Aplică"
@@ -141,7 +195,7 @@ export default function Card() {
               size="small"
               color={COLORS.background_green}
               style={{
-                marginBottom: 100,
+                width: '100%',
               }}
             />
           ) : null}
@@ -186,6 +240,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 16,
+    color: COLORS.background_green,
   },
   description: {
     fontSize: 16,
