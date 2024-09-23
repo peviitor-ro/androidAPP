@@ -1,25 +1,25 @@
-import {
-  View,
-  StyleSheet,
-} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Search from '../components/Search';
 import COLORS from '../constants/COLORS';
 import Card from '../components/Card';
+import Background from '../components/Background';
 
 export default function Results() {
-
   return (
-    <View style={styles.container} >
-      <Search style={searchStyles} />
-      <Card />
-    </View>
+    <Background>
+      <View style={styles.container}>
+        <Search style={searchStyles} />
+        <Card />
+      </View>
+    </Background>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    zIndex: 1,
   },
   title: {
     fontSize: 24,

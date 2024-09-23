@@ -5,8 +5,9 @@ import Logo from '../assets/svg/Logo';
 export default function Header() {
   const navigation = useNavigation();
   return (
-    <View style={styles.container} 
-      onTouchStart={() => navigation.navigate('Home')}
+    <View
+      style={styles.container}
+      onTouchStart={() => navigation.navigate('Acasă')}
     >
       <Logo />
     </View>
@@ -22,5 +23,5 @@ const styles = StyleSheet.create({
         marginTop: 40,
       },
     }),
-  }
+  },
 });

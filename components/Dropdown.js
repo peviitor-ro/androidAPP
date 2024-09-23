@@ -9,7 +9,6 @@ const defaultStyle = StyleSheet.create({
     zIndex: 1,
     backgroundColor: 'white',
     borderRadius: 5,
-    padding: 10,
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,

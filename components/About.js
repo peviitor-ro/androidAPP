@@ -1,22 +1,38 @@
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import COLORS from '../constants/COLORS';
 import Dungi from '../assets/svg/Dungi';
 
 export default function About({ jobs }) {
+ const { width } = Dimensions.get('window');
+
+ const [isSmallScreen, setIsSmallScreen] = useState(width < 375);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const { width } = Dimensions.get('window');
+      setIsSmallScreen(width < 375);
+    };
+
+    handleResize();
+  }, [width]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.h1}>
         Locul de muncă visat, la{' '}
-        <View style={styles.inlineContainer}>
+        <View style={[styles.inlineContainer, 
+          isSmallScreen ? {height: 33} : {height: 30}
+        ]}>
           <Text style={styles.middleText}>un click</Text>
           <Dungi style={styles.svg} />
         </View>{' '}
-        distanță.
+        distanță
       </Text>
       <Text style={styles.h4}>
         Peste
         <Text style={styles.span}> {jobs} </Text>
-        locuri de muncă din România actualizate zilnic.
+        locuri de muncă din România actualizate zilnic
       </Text>
     </View>
   );
@@ -44,7 +60,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     position: 'relative',
-    height:30,
   },
   middleText: {
     fontSize: 28,
@@ -55,14 +70,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 10,
     position: 'absolute',
-    ...Platform.select({
-      ios: {
-        top: 28,
-      },
-      android: {
-        top: 30,
-      },
-    }),
+    bottom: -10,
   },
   span: {
     color: COLORS.text_orange,
