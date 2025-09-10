@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 import { useJobsInfiniteQuery } from '../landing/landing.queries';
 import NoResults from './NoResults';
-import Web from './Web';
 import useJobStore from '../store/jobs.state';
 import CustomButton from './Buttons';
 import Map from '../assets/svg/Map';
 import COLORS from '../constants/COLORS';
 import NoImage from '../assets/svg/NoImage';
+import * as WebBrowser from 'expo-web-browser';
 
 function typeTranslate(type) {
   const typesList = type.split(',');
@@ -46,8 +46,6 @@ export default function Card() {
     useJobsInfiniteQuery(search, cities, counties, remote);
 
   const [loading, setLoading] = useState();
-  const [url, setUrl] = useState('');
-  const [showWebView, setShowWebView] = useState(false);
 
   useEffect(() => {
     switch (true) {
@@ -80,11 +78,6 @@ export default function Card() {
       layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom
     );
-  };
-
-  const handlePress = (index) => {
-    setUrl(jobs[index].job_link);
-    setShowWebView(true);
   };
 
   return (
@@ -182,7 +175,9 @@ export default function Card() {
                 </View>
                 <CustomButton
                   title="Aplică"
-                  onPress={() => handlePress(index)}
+                  onPress={() => 
+                    WebBrowser.openBrowserAsync(job.job_link)
+                  }
                 />
               </View>
             ))
@@ -201,7 +196,6 @@ export default function Card() {
           ) : null}
         </ScrollView>
       </View>
-      <Web url={url} visible={showWebView} setVisible={setShowWebView} />
     </View>
   );
 }
