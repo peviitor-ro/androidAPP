@@ -1,7 +1,7 @@
 import { View, StyleSheet } from 'react-native';
 import Search from '../components/Search';
 import COLORS from '../constants/COLORS';
-import Card from '../components/Card';
+import Card from '../components/ContainerCard';
 import Background from '../components/Background';
 
 export default function Results() {
