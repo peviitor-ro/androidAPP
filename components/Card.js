@@ -1,10 +1,13 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { JobContext } from '../context/JobContext';
 import * as WebBrowser from 'expo-web-browser';
 import COLORS from '../constants/COLORS';
 import NoImage from '../assets/svg/NoImage';
 import Map from '../assets/svg/Map';
 import Heart from '../assets/svg/Heart';
+import Delete from '../assets/svg/Delete';
 import CustomButton from './Buttons';
+import React, { useContext } from 'react';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,14 +16,11 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 300,
+    height: 350,
     width: 300,
     justifyContent: 'space-evenly',
   },
@@ -42,16 +42,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.background_green,
   },
-  description: {
-    fontSize: 16,
-  },
   noImage: {
     width: 100,
     height: 100,
     alignSelf: 'center',
-  },
-  button: {
-    backgroundColor: 'red',
   },
   heart: {
     margin: 10,
@@ -60,19 +54,20 @@ const styles = StyleSheet.create({
 
 function typeTranslate(type) {
   const typesList = type.split(',');
-  const types = typesList.map((type) => {
-    switch (type.toLowerCase()) {
-      case 'remote':
-        return 'Remote';
-      case 'hybrid':
-        return 'Hibrid';
-      case 'on-site':
-        return 'La fața locului';
-      default:
-        return 'Necunoscut';
-    }
-  });
-  return types.join(', ');
+  return typesList
+    .map((t) => {
+      switch (t.toLowerCase()) {
+        case 'remote':
+          return 'Remote';
+        case 'hybrid':
+          return 'Hibrid';
+        case 'on-site':
+          return 'La fața locului';
+        default:
+          return 'Necunoscut';
+      }
+    })
+    .join(', ');
 }
 
 function refomatCity(city, county) {
@@ -82,8 +77,25 @@ function refomatCity(city, county) {
   return city;
 }
 
-export default function Card(job) {
-  const { logo, company_name, job_title, city, county, remote, job_link } = job.job;
+export default function Card({ job }) {
+
+  const { savedJobs, addJob, deleteJob } = useContext(JobContext);
+
+  const { id, logo, company_name, job_title, city, county, remote, job_link } =
+    job;
+
+  const isSaved = savedJobs.some((j) => j.id === id);
+
+  const handleSave = () => {
+    if (isSaved) {
+      deleteJob(id);
+      alert('Jobul a fost șters din favorite!');
+    } else {
+      addJob(job);
+      alert('Job salvat cu succes!');
+    }
+  };
+
   return (
     <View style={styles.container}>
       {logo ? (
@@ -91,7 +103,7 @@ export default function Card(job) {
       ) : (
         <NoImage style={styles.noImage} />
       )}
-      <View style=  {{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <Text style={styles.company} numberOfLines={1} ellipsizeMode="tail">
           {company_name}
         </Text>
@@ -99,54 +111,36 @@ export default function Card(job) {
           {job_title}
         </Text>
       </View>
+
       <View style={{ flex: 1, flexDirection: 'column', gap: 5 }}>
         {city ? (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 5,
-            }}
-          >
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
             <Map />
-            <Text
-              style={styles.location}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
+            <Text style={styles.location} numberOfLines={1}>
               {refomatCity(city, county)}
             </Text>
           </View>
         ) : null}
+
         {remote ? (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 5,
-            }}
-          >
-            <Text
-              style={styles.location}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+            <Text style={styles.location} numberOfLines={1}>
               Tipul Jobului: {typeTranslate(remote)}
             </Text>
           </View>
         ) : null}
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 10,
-            right: 10,
-          }}
-        >
-          <TouchableOpacity>
-            <Heart style={styles.heart} />
+
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <TouchableOpacity onPress={handleSave}>
+            {isSaved ? (
+              <Delete style={styles.heart} />
+            ) : (
+              <Heart style={styles.heart} />
+            )}
           </TouchableOpacity>
         </View>
       </View>
+
       <CustomButton
         title="Aplică"
         onPress={() => WebBrowser.openBrowserAsync(job_link)}
@@ -154,4 +148,3 @@ export default function Card(job) {
     </View>
   );
 }
-
