@@ -12,10 +12,13 @@
     },
     "production": {
       "android": {
-        "buildType": "apk" 
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease",
+        "image": "default",
+        "withoutCredentials": false
       },
       "ios": {
-        "enterpriseProvisioning": "universal" 
+        "enterpriseProvisioning": "universal"
       }
     }
   },

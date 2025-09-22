@@ -8,6 +8,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { LinearGradient } from 'expo-linear-gradient';
 import AppNavigator from './navigation/AppNavigator';
+import { JobProvider } from './context/JobContext';
 
 export default function App() {
   const height = Dimensions.get('window').height;
@@ -24,7 +25,9 @@ export default function App() {
           style={styles.container}
         >
           <SafeAreaView style={styles.container}>
-            <AppNavigator />
+            <JobProvider>
+              <AppNavigator />
+            </JobProvider>
           </SafeAreaView>
         </KeyboardAwareScrollView>
       </ScrollView>
