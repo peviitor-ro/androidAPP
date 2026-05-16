@@ -2,7 +2,7 @@
   "expo": {
     "name": "PeViitor",
     "slug": "Peviitor_native_app",
-    "version": "1.1.0",
+    "version": "1.2.1",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,8 +17,9 @@
       "bundleIdentifier": "peviitor.exp.ro"
     },
     "android": {
-      "versionCode": 2,
-      "version": "1.1.0",
+      "versionCode": 4,
+      "version": "1.2.1",
+      "minSdkVersion": 24,
       "compileSdkVersion": 35,
       "targetSdkVersion": 35,
       "buildToolsVersion": "35.0.0",

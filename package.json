@@ -1,6 +1,6 @@
 {
   "name": "peviitor_native_app",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@react-native-community/cli": "^20.1.3",
     "eslint": "^8.57.0",
     "eslint-config-expo": "^7.0.0"
   },
