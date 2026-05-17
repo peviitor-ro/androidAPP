@@ -12,6 +12,9 @@ const defaultStyles = StyleSheet.create({
   buttonText: {
     color: COLORS.white,
     fontSize: 16,
+    lineHeight: 20,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
 });
 

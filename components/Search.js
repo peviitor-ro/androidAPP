@@ -156,9 +156,12 @@ const defaultStyles = StyleSheet.create({
     borderColor: COLORS.border_grey,
     borderRadius: 5,
     paddingLeft: 40,
+    paddingRight: 12,
+    paddingVertical: 0,
     width: '100%',
     backgroundColor: COLORS.white,
     color: COLORS.background_green,
+    textAlignVertical: 'center',
   },
   inputContainer: {
     flexDirection: 'row',
