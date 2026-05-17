@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Background from './Background';
 import COLORS from '../constants/COLORS';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
@@ -56,8 +57,10 @@ const getFilters = (selectedItems) => {
 export default function Filter() {
   const { setCities, setCounties, setRemote } = useJobStore();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const [selectedItems, setSelectedItems] = useState([]);
+  const bottomActionSpacing = Math.max(insets.bottom, 16);
 
   const onConfirm = () => {
     navigation.navigate('Rezultate');
@@ -97,7 +100,11 @@ export default function Filter() {
             </View>
           }
           parentChipText="Selectează"
-          styles={styles}
+          styles={{
+            ...styles,
+            button: [styles.button, { paddingTop: 12, paddingBottom: bottomActionSpacing }],
+            cancelButton: [styles.cancelButton, { paddingTop: 12, paddingBottom: bottomActionSpacing }],
+          }}
           onConfirm={onConfirm}
         />
       </View>
@@ -152,6 +159,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: COLORS.background_green,
     color: COLORS.white,
+  },
+  cancelButton: {
+    backgroundColor: COLORS.background_green,
   },
   confirmText: {
     color: COLORS.white,
