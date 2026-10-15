@@ -1,4 +1,4 @@
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Logo from '../assets/svg/Logo';
 
@@ -18,10 +18,5 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    ...Platform.select({
-      android: {
-        marginTop: 40,
-      },
-    }),
   },
 });

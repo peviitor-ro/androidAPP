@@ -18,7 +18,11 @@ function BottomTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerShown: false,
+        headerShown: true,
+        headerTitle: () => <Header />,
+        headerTitleAlign: 'center',
+        headerStyle: { backgroundColor: '#d0e7f2' },
+        headerShadowVisible: false,
         tabBarStyle: {
           backgroundColor: '#f6f0ec',
         },
@@ -54,7 +58,6 @@ export default function AppNavigator() {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        <Header />
         <Stack.Navigator
           initialRouteName="Acasă"
           screenOptions={{
