@@ -1,8 +1,7 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { Alert, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { JobContext } from '../context/JobContext';
 import * as WebBrowser from 'expo-web-browser';
 import COLORS from '../constants/COLORS';
-import NoImage from '../assets/svg/NoImage';
 import Map from '../assets/svg/Map';
 import Heart from '../assets/svg/Heart';
 import Delete from '../assets/svg/Delete';
@@ -11,44 +10,109 @@ import React, { useContext } from 'react';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 10,
+    backgroundColor: '#fbfbfb',
+    borderRadius: 16,
+    padding: 16,
     margin: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    height: 350,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.16,
+    shadowRadius: 3,
+    elevation: 3,
     width: 300,
-    justifyContent: 'space-evenly',
+    minHeight: 260,
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
   },
-  logo: {
-    width: '100%',
-    height: 100,
-    resizeMode: 'contain',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    width: '100%',
+  topRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: 10,
   },
   company: {
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#6b7280',
+    marginBottom: 6,
+  },
+  title: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#111827',
+    lineHeight: 24,
+  },
+  metaSection: {
+    marginTop: 14,
+    gap: 10,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   location: {
-    fontSize: 16,
-    color: COLORS.background_green,
+    flex: 1,
+    fontSize: 14,
+    color: '#374151',
   },
-  noImage: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
+  badgeRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
-  heart: {
-    margin: 10,
+  badge: {
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: '#f3f4f6',
+  },
+  remoteBadge: {
+    backgroundColor: '#dbeafe',
+  },
+  salaryBadge: {
+    backgroundColor: '#dcfce7',
+  },
+  badgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#374151',
+  },
+  remoteText: {
+    color: '#1e40af',
+  },
+  salaryText: {
+    color: '#166534',
+  },
+  footer: {
+    marginTop: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  actionButton: {
+    flex: 1,
+    borderRadius: 12,
+    paddingVertical: 12,
+    backgroundColor: COLORS.background_green,
+  },
+  actionButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  saveButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#d2e2e4',
+    backgroundColor: COLORS.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  saveButtonActive: {
+    backgroundColor: '#fff7ed',
   },
 });
 
@@ -77,44 +141,68 @@ function refomatCity(city, county) {
   return city;
 }
 
-export default function Card({ job }) {
+function formatSalary(job) {
+  const { salary_min, salary_max, salary_currency } = job;
 
+  if (salary_min == null && salary_max == null) {
+    return null;
+  }
+
+  const currency = salary_currency ? ` ${salary_currency}` : '';
+
+  if (salary_min != null && salary_max != null) {
+    return `${salary_min} - ${salary_max}${currency}`;
+  }
+
+  if (salary_min != null) {
+    return `De la ${salary_min}${currency}`;
+  }
+
+  return `Până la ${salary_max}${currency}`;
+}
+
+export default function Card({ job }) {
   const { savedJobs, addJob, deleteJob } = useContext(JobContext);
 
-  const { id, logo, company_name, job_title, city, county, remote, job_link } =
+  const { id, company_name, job_title, city, county, remote, job_link } =
     job;
 
   const isSaved = savedJobs.some((j) => j.id === id);
+  const salary = formatSalary(job);
 
   const handleSave = () => {
     if (isSaved) {
       deleteJob(id);
-      alert('Jobul a fost șters din favorite!');
+      Alert.alert('Anunțul a fost șters din favorite!');
     } else {
       addJob(job);
-      alert('Job salvat cu succes!');
+      Alert.alert('Anunțul a fost salvat cu succes!');
     }
   };
 
   return (
     <View style={styles.container}>
-      {logo ? (
-        <Image source={{ uri: logo[0] }} style={styles.logo} />
-      ) : (
-        <NoImage style={styles.noImage} />
-      )}
-      <View style={{ flex: 1 }}>
-        <Text style={styles.company} numberOfLines={1} ellipsizeMode="tail">
-          {company_name}
-        </Text>
-        <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-          {job_title}
-        </Text>
+      <View style={styles.topRow}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.company} numberOfLines={1} ellipsizeMode="tail">
+            {company_name}
+          </Text>
+          <Text style={styles.title} numberOfLines={3} ellipsizeMode="tail">
+            {job_title}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          onPress={handleSave}
+          style={[styles.saveButton, isSaved && styles.saveButtonActive]}
+        >
+          {isSaved ? <Delete /> : <Heart />}
+        </TouchableOpacity>
       </View>
 
-      <View style={{ flex: 1, flexDirection: 'column', gap: 5 }}>
+      <View style={styles.metaSection}>
         {city ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+          <View style={styles.locationRow}>
             <Map />
             <Text style={styles.location} numberOfLines={1}>
               {refomatCity(city, county)}
@@ -122,29 +210,33 @@ export default function Card({ job }) {
           </View>
         ) : null}
 
-        {remote ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-            <Text style={styles.location} numberOfLines={1}>
-              Tipul Jobului: {typeTranslate(remote)}
-            </Text>
-          </View>
-        ) : null}
+        <View style={styles.badgeRow}>
+          {remote ? (
+            <View style={[styles.badge, styles.remoteBadge]}>
+              <Text style={[styles.badgeText, styles.remoteText]}>
+                {typeTranslate(remote)}
+              </Text>
+            </View>
+          ) : null}
 
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <TouchableOpacity onPress={handleSave}>
-            {isSaved ? (
-              <Delete style={styles.heart} />
-            ) : (
-              <Heart style={styles.heart} />
-            )}
-          </TouchableOpacity>
+          {salary ? (
+            <View style={[styles.badge, styles.salaryBadge]}>
+              <Text style={[styles.badgeText, styles.salaryText]}>{salary}</Text>
+            </View>
+          ) : null}
         </View>
       </View>
 
-      <CustomButton
-        title="Aplică"
-        onPress={() => WebBrowser.openBrowserAsync(job_link)}
-      />
+      <View style={styles.footer}>
+        <CustomButton
+          title="Aplică"
+          onPress={() => WebBrowser.openBrowserAsync(job_link)}
+          style={{
+            button: styles.actionButton,
+            buttonText: styles.actionButtonText,
+          }}
+        />
+      </View>
     </View>
   );
 }
