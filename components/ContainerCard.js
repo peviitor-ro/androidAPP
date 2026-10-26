@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { View, ScrollView, ActivityIndicator } from 'react-native';
+import { useEffect } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useJobsInfiniteQuery } from '../landing/landing.queries';
 import NoResults from './NoResults';
 import ServerDown from './ServerDown';
 import useJobStore from '../store/jobs.state';
 import COLORS from '../constants/COLORS';
-import Card from './Card';
+import JobList from './JobList';
 
 export default function ContainerCard() {
   const { jobs, search, setJobs, cities, counties, remote } = useJobStore();
@@ -16,95 +16,70 @@ export default function ContainerCard() {
     hasNextPage,
     isFetchingNextPage,
     isError,
-  } =
-    useJobsInfiniteQuery(search, cities, counties, remote);
-
-  const [loading, setLoading] = useState();
+  } = useJobsInfiniteQuery(search, cities, counties, remote);
 
   useEffect(() => {
-    switch (true) {
-      case status === 'pending':
-        setLoading(true);
-        break;
-      case status === 'success' && data.pages[0].results.length > 0:
-        setJobs([...data.pages.map((page) => page.results).flat()]);
-        setLoading(false);
-        break;
-      default:
-        setLoading(false);
+    if (status === 'success') {
+      setJobs(data.pages.flatMap((page) => page.results));
     }
-  }, [search, cities, counties, remote, status, data]);
-
-  const handleScroll = ({ nativeEvent }) => {
-    const isScrolledToEnd = isCloseToBottom(nativeEvent);
-    if (isScrolledToEnd && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  };
-
-  const isCloseToBottom = ({
-    layoutMeasurement,
-    contentOffset,
-    contentSize,
-  }) => {
-    const paddingToBottom = 20;
-    return (
-      layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom
-    );
-  };
+  }, [status, data, setJobs]);
 
   return (
-    <View
-      style={{
-        flexGrow: 1,
-        justifyContent: 'center',
-        zIndex: -1,
-        borderTopWidth: 1,
-        borderColor: COLORS.background_green,
-      }}
-    >
-      <View style={{ flexGrow: 1, justifyContent: 'center', zIndex: -1 }}>
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingBottom: 100,
-          }}
-          scrollEnabled={true}
-          nestedScrollEnabled={true}
-          onScroll={handleScroll}
-        >
-          {loading ? (
+    <View style={styles.container}>
+      <JobList
+        key={JSON.stringify([search, cities, counties, remote])}
+        data={status === 'success' ? jobs : []}
+        contentContainerStyle={styles.content}
+        nestedScrollEnabled
+        onEndReached={() => {
+          if (hasNextPage && !isFetchingNextPage && status === 'success') {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        ListEmptyComponent={
+          status === 'pending' ? (
             <ActivityIndicator
               size="large"
               color={COLORS.background_green}
-              style={{
-                marginTop: 50,
-              }}
+              style={styles.loading}
             />
           ) : isError ? (
             <ServerDown />
-          ) : data?.pages[0].results.length > 0 ? (
-            jobs.map((job, index) => <Card key={index} job={job} />)
           ) : (
             <NoResults />
-          )}
-
-          {isFetchingNextPage ? (
+          )
+        }
+        ListFooterComponent={
+          isFetchingNextPage && jobs.length > 0 ? (
             <ActivityIndicator
               size="small"
               color={COLORS.background_green}
-              style={{
-                width: '100%',
-              }}
+              style={styles.footer}
             />
-          ) : null}
-        </ScrollView>
-      </View>
+          ) : null
+        }
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    borderTopWidth: 1,
+    borderColor: COLORS.background_green,
+  },
+  content: {
+    justifyContent: 'center',
+    paddingBottom: 100,
+  },
+  loading: {
+    marginTop: 50,
+  },
+  footer: {
+    width: '100%',
+    padding: 16,
+  },
+});

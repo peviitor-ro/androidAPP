@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { JobContext } from '../context/JobContext';
 import Background from '../components/Background';
-import Card from '../components/Card';
+import JobList from '../components/JobList';
 import COLORS from '../constants/COLORS';
 
 const styles = StyleSheet.create({
@@ -17,14 +17,6 @@ const styles = StyleSheet.create({
     color: COLORS.background_green,
     fontSize: 18,
   },
-  scrollView: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 100,
-  },
 });
 
 export default function Saved() {
@@ -36,15 +28,7 @@ export default function Saved() {
         {savedJobs.length === 0 ? (
           <Text style={styles.text}>Niciun anunț salvat momentan.</Text>
         ) : (
-          <ScrollView
-            contentContainerStyle={styles.scrollView}
-            scrollEnabled={true}
-            nestedScrollEnabled={true}
-          >
-            {savedJobs.map((job, index) => (
-              <Card key={index} job={job} />
-            ))}
-          </ScrollView>
+          <JobList data={savedJobs} />
         )}
       </View>
     </Background>
