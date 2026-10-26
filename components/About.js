@@ -1,37 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import COLORS from '../constants/COLORS';
 import Dungi from '../assets/svg/Dungi';
 
 export default function About({ jobs }) {
- const { width } = Dimensions.get('window');
+  const { width } = useWindowDimensions();
 
- const [isSmallScreen, setIsSmallScreen] = useState(width < 375);
+  const isSmallScreen = width < 375;
+  const isTablet = width >= 768;
 
-  useEffect(() => {
-    const handleResize = () => {
-      const { width } = Dimensions.get('window');
-      setIsSmallScreen(width < 375);
-    };
-
-    handleResize();
-  }, [width]);
+  const titleSize = isTablet ? 42 : isSmallScreen ? 28 : 34;
+  const subtitleSize = isTablet ? 18 : 15;
+  const highlightWidth = isTablet ? 150 : isSmallScreen ? 95 : 120;
+  const underlineTop = isTablet ? -4 : -2;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.h1}>
-        Locul de muncă visat, la{' '}
-        <View style={[styles.inlineContainer, 
-          isSmallScreen ? {height: 33} : {height: 30}
-        ]}>
-          <Text style={styles.middleText}>un click</Text>
-          <Dungi style={styles.svg} />
-        </View>{' '}
-        distanță
-      </Text>
-      <Text style={styles.h4}>
+      <View style={styles.titleBlock}>
+        <Text style={[styles.title, { fontSize: titleSize, lineHeight: titleSize * 1.15 }]}>
+          Locul de muncă visat,
+        </Text>
+
+        <View style={styles.highlightRow}>
+          <Text
+            style={[
+              styles.title,
+              styles.secondaryTitle,
+              { fontSize: titleSize, lineHeight: titleSize * 1.15 },
+            ]}
+          >
+            la
+          </Text>
+
+          <View style={styles.highlightWrap}>
+            <Text
+              style={[
+                styles.title,
+                styles.highlightText,
+                { fontSize: titleSize, lineHeight: titleSize * 1.15 },
+              ]}
+            >
+              un click
+            </Text>
+            <Dungi
+              style={[
+                styles.underline,
+                { width: highlightWidth, marginTop: underlineTop },
+              ]}
+            />
+          </View>
+
+          <Text
+            style={[
+              styles.title,
+              styles.secondaryTitle,
+              { fontSize: titleSize, lineHeight: titleSize * 1.15 },
+            ]}
+          >
+            distanță
+          </Text>
+        </View>
+      </View>
+
+      <Text style={[styles.subtitle, { fontSize: subtitleSize }]}>
         Peste
-        <Text style={styles.span}> {jobs} </Text>
+        <Text style={styles.jobsCount}> {jobs} </Text>
         locuri de muncă din România actualizate zilnic
       </Text>
     </View>
@@ -40,42 +73,49 @@ export default function About({ jobs }) {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     alignItems: 'center',
-    gap: 10,
+    gap: 16,
+    paddingHorizontal: 24,
   },
-
-  h1: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: COLORS.text_orange,
-    marginHorizontal: 20,
-  },
-
-  h4: {
-    fontSize: 14,
-    marginHorizontal: 20,
-  },
-
-  inlineContainer: {
-    flexDirection: 'column',
+  titleBlock: {
+    width: '100%',
     alignItems: 'center',
-    position: 'relative',
+    gap: 2,
   },
-  middleText: {
-    fontSize: 28,
+  title: {
+    textAlign: 'center',
     fontWeight: 'bold',
     color: COLORS.text_orange,
   },
-  svg: {
-    width: 100,
+  secondaryTitle: {
+    color: COLORS.background_green,
+  },
+  highlightRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    columnGap: 8,
+    rowGap: 2,
+  },
+  highlightWrap: {
+    alignItems: 'center',
+    paddingHorizontal: 2,
+  },
+  highlightText: {
+    color: COLORS.text_orange,
+  },
+  underline: {
     height: 10,
-    position: 'absolute',
-    bottom: -10,
   },
-  span: {
+  subtitle: {
+    textAlign: 'center',
+    color: COLORS.background_green,
+    maxWidth: 520,
+  },
+  jobsCount: {
     color: COLORS.text_orange,
     fontWeight: 'bold',
   },
 });
-
-

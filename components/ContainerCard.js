@@ -2,13 +2,21 @@ import { useEffect, useState } from 'react';
 import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { useJobsInfiniteQuery } from '../landing/landing.queries';
 import NoResults from './NoResults';
+import ServerDown from './ServerDown';
 import useJobStore from '../store/jobs.state';
 import COLORS from '../constants/COLORS';
 import Card from './Card';
 
 export default function ContainerCard() {
   const { jobs, search, setJobs, cities, counties, remote } = useJobStore();
-  const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const {
+    data,
+    status,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+  } =
     useJobsInfiniteQuery(search, cities, counties, remote);
 
   const [loading, setLoading] = useState();
@@ -78,6 +86,8 @@ export default function ContainerCard() {
                 marginTop: 50,
               }}
             />
+          ) : isError ? (
+            <ServerDown />
           ) : data?.pages[0].results.length > 0 ? (
             jobs.map((job, index) => <Card key={index} job={job} />)
           ) : (

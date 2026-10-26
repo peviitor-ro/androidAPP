@@ -1,15 +1,22 @@
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Logo from '../assets/svg/Logo';
 
 export default function Header() {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+
   return (
     <View
-      style={styles.container}
-      onTouchStart={() => navigation.navigate('Acasă')}
+      style={[
+        styles.container,
+        Platform.OS === 'ios' ? { paddingTop: insets.top + 8 } : null,
+      ]}
     >
-      <Logo />
+      <Pressable onPress={() => navigation.navigate('Acasă')}>
+        <Logo />
+      </Pressable>
     </View>
   );
 }
@@ -21,6 +28,9 @@ const styles = StyleSheet.create({
     ...Platform.select({
       android: {
         marginTop: 40,
+      },
+      ios: {
+        paddingBottom: 8,
       },
     }),
   },

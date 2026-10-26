@@ -34,9 +34,7 @@ export default function Saved() {
     <Background>
       <View style={styles.container}>
         {savedJobs.length === 0 ? (
-          <Text style={styles.text}>
-            Niciun job salvat momentan.
-          </Text>
+          <Text style={styles.text}>Niciun anunț salvat momentan.</Text>
         ) : (
           <ScrollView
             contentContainerStyle={styles.scrollView}
