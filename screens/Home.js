@@ -1,9 +1,10 @@
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, View } from 'react-native';
 import { useState, useEffect } from 'react';
 import { total } from '../services/landing/landing.service';
 import Background from '../components/Background';
 import About from '../components/About';
 import Search from '../components/Search';
+import { FilterPills } from '../features/filters/FilterPills';
 import Racheta from '../assets/svg/Racheta';
 
 export default function Home() {
@@ -20,7 +21,10 @@ export default function Home() {
         style={styles.scrollView}
       >
         <About jobs={jobs} />
-        <Search />
+        <View style={styles.searchGroup}>
+          <Search />
+          <FilterPills />
+        </View>
         <Racheta style={styles.svg} />
       </ScrollView>
     </Background>
@@ -36,6 +40,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     gap: 20,
+  },
+  searchGroup: {
+    width: '100%',
+    gap: 8,
   },
   svg: {
     width: 300,

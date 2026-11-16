@@ -2,9 +2,10 @@ import { create } from 'zustand';
 
 export const INITIAL_JOBS_STATE = {
   search: '',
-  cities : '',
+  cities: '',
   counties: '',
   remote: '',
+  selectedFilterIds: [],
   jobs: [],
 };
 
@@ -14,7 +15,8 @@ const useJobsOptionsStore = create((set) => ({
   setCities: (cities) => set(() => ({ cities })),
   setRemote: (remote) => set(() => ({ remote })),
   setCounties: (counties) => set(() => ({ counties })),
-  setJobs: (jobs) => set(() => ({ jobs })), 
+  setSelectedFilterIds: (selectedFilterIds) => set(() => ({ selectedFilterIds })),
+  setJobs: (jobs) => set(() => ({ jobs })),
   reset: () => set(() => ({ ...INITIAL_JOBS_STATE })),
 }));
 
