@@ -13,14 +13,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fbfbfb',
     borderRadius: 16,
     padding: 16,
-    margin: 10,
+    marginHorizontal: 10,
+    marginVertical: 6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.16,
     shadowRadius: 3,
     elevation: 3,
     width: 300,
-    minHeight: 260,
+    minHeight: 215,
     justifyContent: 'space-between',
     borderWidth: 1,
     borderColor: '#e5e7eb',
@@ -44,6 +45,9 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   metaSection: {
+    marginTop: 10,
+  },
+  bottomSection: {
     marginTop: 14,
     gap: 10,
   },
@@ -182,60 +186,64 @@ export default function Card({ job }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topRow}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.company} numberOfLines={1} ellipsizeMode="tail">
-            {company_name}
-          </Text>
-          <Text style={styles.title} numberOfLines={3} ellipsizeMode="tail">
-            {job_title}
-          </Text>
+      <View>
+        <View style={styles.topRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.company} numberOfLines={1} ellipsizeMode="tail">
+              {company_name}
+            </Text>
+            <Text style={styles.title} numberOfLines={3} ellipsizeMode="tail">
+              {job_title}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            onPress={handleSave}
+            style={[styles.saveButton, isSaved && styles.saveButtonActive]}
+          >
+            {isSaved ? <Delete /> : <Heart />}
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          onPress={handleSave}
-          style={[styles.saveButton, isSaved && styles.saveButtonActive]}
-        >
-          {isSaved ? <Delete /> : <Heart />}
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.metaSection}>
         {city ? (
-          <View style={styles.locationRow}>
+          <View style={[styles.locationRow, styles.metaSection]}>
             <Map />
             <Text style={styles.location} numberOfLines={1}>
               {refomatCity(city, county)}
             </Text>
           </View>
         ) : null}
-
-        <View style={styles.badgeRow}>
-          {remote ? (
-            <View style={[styles.badge, styles.remoteBadge]}>
-              <Text style={[styles.badgeText, styles.remoteText]}>
-                {typeTranslate(remote)}
-              </Text>
-            </View>
-          ) : null}
-
-          {salary ? (
-            <View style={[styles.badge, styles.salaryBadge]}>
-              <Text style={[styles.badgeText, styles.salaryText]}>{salary}</Text>
-            </View>
-          ) : null}
-        </View>
       </View>
 
-      <View style={styles.footer}>
-        <CustomButton
-          title="Aplică"
-          onPress={() => WebBrowser.openBrowserAsync(job_link)}
-          style={{
-            button: styles.actionButton,
-            buttonText: styles.actionButtonText,
-          }}
-        />
+      <View style={styles.bottomSection}>
+        {(remote || salary) ? (
+          <View style={styles.badgeRow}>
+            {remote ? (
+              <View style={[styles.badge, styles.remoteBadge]}>
+                <Text style={[styles.badgeText, styles.remoteText]}>
+                  {typeTranslate(remote)}
+                </Text>
+              </View>
+            ) : null}
+
+            {salary ? (
+              <View style={[styles.badge, styles.salaryBadge]}>
+                <Text style={[styles.badgeText, styles.salaryText]}>{salary}</Text>
+              </View>
+            ) : null}
+          </View>
+        ) : null}
+
+        <View style={styles.footer}>
+          <CustomButton
+            title="Aplică"
+            onPress={() => WebBrowser.openBrowserAsync(job_link)}
+            style={{
+              button: styles.actionButton,
+              buttonText: styles.actionButtonText,
+            }}
+          />
+        </View>
       </View>
     </View>
   );
