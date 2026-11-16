@@ -13,6 +13,7 @@ import useJobStore from '../store/jobs.state';
 import CustomButton from './Buttons';
 import SearchIcon from '../assets/svg/SearchIcon';
 import Dropdown from './Dropdown';
+import { FilterButton } from '../features/filters/FilterButton';
 import COLORS from '../constants/COLORS';
 
 export default function Search({ ...props }) {
@@ -71,20 +72,25 @@ export default function Search({ ...props }) {
 
   return (
     <View style={[defaultStyles.container, style.container]}>
-      <View style={[defaultStyles.inputContainer, style.inputContainer]}>
+      <View style={[defaultStyles.searchBox, style.searchBox]}>
         <SearchIcon style={[defaultStyles.icon, style.icon]} />
         <TextInput
           style={[defaultStyles.input, style.input]}
           placeholder="Caută un loc de muncă"
+          placeholderTextColor="#7a8b8b"
           defaultValue={search}
           onChangeText={handleOnChange}
         />
+        <CustomButton
+          style={{
+            button: [defaultStyles.searchButton, style.button],
+            buttonText: [defaultStyles.searchButtonText, style.buttonText],
+          }}
+          title="Caută"
+          onPress={() => navigation.navigate('Rezultate')}
+        />
+        <FilterButton />
       </View>
-      <CustomButton
-        style={style}
-        title="Caută"
-        onPress={() => navigation.navigate('Rezultate')}
-      />
       {loading ? (
         <ActivityIndicator
           size="large"
@@ -147,30 +153,44 @@ export default function Search({ ...props }) {
 const defaultStyles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    gap: 10,
     marginHorizontal: 20,
   },
-  input: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: COLORS.border_grey,
-    borderRadius: 5,
-    paddingLeft: 40,
-    paddingRight: 12,
-    paddingVertical: 0,
-    width: '100%',
+  searchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: COLORS.white,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#e2ecea',
+    paddingLeft: 14,
+    paddingRight: 6,
+    paddingVertical: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 8,
+    paddingVertical: 0,
+    fontSize: 15,
     color: COLORS.background_green,
     textAlignVertical: 'center',
   },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   icon: {
-    position: 'absolute',
-    left: 10,
-    zIndex: 1,
+    marginRight: 2,
+  },
+  searchButton: {
+    borderRadius: 12,
+    paddingHorizontal: 18,
+    paddingVertical: 9,
+  },
+  searchButtonText: {
+    fontSize: 14,
+    fontWeight: '700',
   },
   dropdown: {
     zIndex: 1,
