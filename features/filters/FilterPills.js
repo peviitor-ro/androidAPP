@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import COLORS from '../../constants/COLORS';
+import COLORS from '../../core/theme/COLORS';
 import { splitFilterChips } from './domain/extractFilters';
 import { filterStyles } from './presentation/filter.styles';
 import { useFilterSelection } from './presentation/useFilterSelection';

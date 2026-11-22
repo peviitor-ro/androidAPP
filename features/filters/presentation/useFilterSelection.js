@@ -1,4 +1,4 @@
-import useJobStore from '../../../store/jobs.state';
+import useJobStore from '../../job_search/data/jobs.state';
 import { extractFilters } from '../domain/extractFilters';
 
 export const useFilterSelection = () => {

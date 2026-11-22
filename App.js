@@ -1,8 +1,8 @@
 import { StyleSheet, StatusBar } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import AppNavigator from './navigation/AppNavigator';
-import { JobProvider } from './context/JobContext';
+import AppNavigator from './app/navigation/AppNavigator';
+import { JobProvider } from './features/jobs/data/JobContext';
 
 export default function App() {
   return (
