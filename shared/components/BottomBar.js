@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const TABS = [
@@ -7,13 +7,33 @@ const TABS = [
   { name: 'Salvate', activeIcon: 'heart', inactiveIcon: 'heart-outline' },
 ];
 
-export function BottomBar({ currentRoute, onSelect }) {
+export function BottomBar({ currentRoute, onSelect, scrollX, pageWidth }) {
+  const safeWidth = pageWidth || 1;
+
   return (
     <View style={styles.container}>
-      {TABS.map((tab) => {
+      {TABS.map((tab, index) => {
         const focused = currentRoute === tab.name;
-        const color = focused ? 'tomato' : 'gray';
-        const iconName = focused ? tab.activeIcon : tab.inactiveIcon;
+        const inputRange = [
+          (index - 1) * safeWidth,
+          index * safeWidth,
+          (index + 1) * safeWidth,
+        ];
+        const activeOpacity = scrollX.interpolate({
+          inputRange,
+          outputRange: [0, 1, 0],
+          extrapolate: 'clamp',
+        });
+        const inactiveOpacity = scrollX.interpolate({
+          inputRange,
+          outputRange: [1, 0, 1],
+          extrapolate: 'clamp',
+        });
+        const scale = scrollX.interpolate({
+          inputRange,
+          outputRange: [1, 1.08, 1],
+          extrapolate: 'clamp',
+        });
 
         return (
           <Pressable
@@ -24,8 +44,36 @@ export function BottomBar({ currentRoute, onSelect }) {
               onSelect(tab.name);
             }}
           >
-            <Ionicons name={iconName} size={24} color={color} />
-            <Text style={[styles.label, { color }]}>{tab.name}</Text>
+            <View style={styles.iconWrapper}>
+              <Animated.View style={[styles.iconLayer, { opacity: inactiveOpacity }]}>
+                <Ionicons name={tab.inactiveIcon} size={24} color="gray" />
+              </Animated.View>
+              <Animated.View
+                style={[
+                  styles.iconLayer,
+                  { opacity: activeOpacity, transform: [{ scale }] },
+                ]}
+              >
+                <Ionicons name={tab.activeIcon} size={24} color="tomato" />
+              </Animated.View>
+            </View>
+            <View style={styles.labelWrapper}>
+              <Animated.Text
+                style={[styles.label, styles.inactiveLabel, { opacity: inactiveOpacity }]}
+              >
+                {tab.name}
+              </Animated.Text>
+              <Animated.Text
+                style={[
+                  styles.label,
+                  styles.activeLabel,
+                  styles.labelOverlay,
+                  { opacity: activeOpacity },
+                ]}
+              >
+                {tab.name}
+              </Animated.Text>
+            </View>
           </Pressable>
         );
       })}
@@ -43,11 +91,38 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 2,
   },
+  iconWrapper: {
+    width: 24,
+    height: 24,
+  },
+  iconLayer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  labelWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   label: {
     fontSize: 11,
+  },
+  labelOverlay: {
+    position: 'absolute',
+  },
+  inactiveLabel: {
+    color: 'gray',
+  },
+  activeLabel: {
+    color: 'tomato',
   },
 });

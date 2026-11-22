@@ -1,5 +1,5 @@
 import { createContext, useContext, useRef, useState, useCallback } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { Animated, useWindowDimensions } from 'react-native';
 
 export const TAB_ROUTES = ['Acasă', 'Rezultate', 'Salvate'];
 
@@ -7,12 +7,15 @@ const TabPagerContext = createContext({
   currentRoute: 'Acasă',
   navigateTo: () => {},
   scrollRef: null,
+  scrollX: new Animated.Value(0),
+  width: 0,
   onMomentumScrollEnd: () => {},
 });
 
 export function TabPagerProvider({ children }) {
   const { width } = useWindowDimensions();
   const scrollRef = useRef(null);
+  const [scrollX] = useState(() => new Animated.Value(0));
   const [currentRoute, setCurrentRoute] = useState('Acasă');
 
   const navigateTo = useCallback(
@@ -37,7 +40,7 @@ export function TabPagerProvider({ children }) {
 
   return (
     <TabPagerContext.Provider
-      value={{ currentRoute, navigateTo, scrollRef, onMomentumScrollEnd }}
+      value={{ currentRoute, navigateTo, scrollRef, scrollX, width, onMomentumScrollEnd }}
     >
       {children}
     </TabPagerContext.Provider>

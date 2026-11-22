@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { View, ScrollView, StyleSheet, BackHandler, useWindowDimensions } from 'react-native';
+import { View, Animated, StyleSheet, BackHandler, useWindowDimensions } from 'react-native';
 import Home from '../../features/landing/Home';
 import Results from '../../features/job_search/Results';
 import Saved from '../../features/jobs/Saved';
@@ -10,7 +10,7 @@ const SCREENS = [Home, Results, Saved];
 
 export function MainTabsPager() {
   const { width } = useWindowDimensions();
-  const { currentRoute, navigateTo, scrollRef, onMomentumScrollEnd } = useTabPager();
+  const { currentRoute, navigateTo, scrollRef, scrollX, onMomentumScrollEnd } = useTabPager();
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -23,13 +23,18 @@ export function MainTabsPager() {
 
   return (
     <View style={styles.container}>
-      <ScrollView
+      <Animated.ScrollView
         ref={scrollRef}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         bounces={false}
         overScrollMode="never"
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: true }
+        )}
         onMomentumScrollEnd={onMomentumScrollEnd}
         style={styles.pager}
       >
@@ -38,8 +43,13 @@ export function MainTabsPager() {
             <Screen />
           </View>
         ))}
-      </ScrollView>
-      <BottomBar currentRoute={currentRoute} onSelect={navigateTo} />
+      </Animated.ScrollView>
+      <BottomBar
+        currentRoute={currentRoute}
+        onSelect={navigateTo}
+        scrollX={scrollX}
+        pageWidth={width}
+      />
     </View>
   );
 }
