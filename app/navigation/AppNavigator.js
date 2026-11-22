@@ -1,68 +1,61 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
 
 import Home from '../../features/landing/Home';
 import Results from '../../features/job_search/Results';
 import Header from '../../shared/components/Header';
 import Saved from '../../features/jobs/Saved';
+import { BottomBar } from '../../shared/components/BottomBar';
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 const queryClient = new QueryClient();
 
-function BottomTabs() {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: true,
-        headerTitle: () => <Header />,
-        headerTitleAlign: 'center',
-        headerStyle: { backgroundColor: '#d0e7f2' },
-        headerShadowVisible: false,
-        tabBarStyle: {
-          backgroundColor: '#f6f0ec',
-        },
-
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === 'Acasă') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Rezultate') {
-            iconName = focused ? 'list' : 'list-outline';
-          } else if (route.name === 'Salvate') {
-            iconName = focused ? 'heart' : 'heart-outline';
-          }
-
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
-      })}
-    >
-      <Tab.Screen name="Acasă" component={Home} />
-      <Tab.Screen name="Rezultate" component={Results} />
-      <Tab.Screen name="Salvate" component={Saved} />
-    </Tab.Navigator>
-  );
-}
-
 export default function AppNavigator() {
+  const navigationRef = useNavigationContainerRef();
+  const [currentRoute, setCurrentRoute] = useState('Acasă');
+
   return (
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Acasă"
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="BottomTabs" component={BottomTabs} />
-        </Stack.Navigator>
+      <NavigationContainer
+        ref={navigationRef}
+        onStateChange={() => {
+          const name = navigationRef.getCurrentRoute()?.name;
+          if (name) setCurrentRoute(name);
+        }}
+      >
+        <View style={styles.container}>
+          <Stack.Navigator
+            initialRouteName="Acasă"
+            screenOptions={{
+              ...TransitionPresets.SlideFromRightIOS,
+              headerShown: true,
+              headerTitle: () => <Header />,
+              headerTitleAlign: 'center',
+              headerStyle: { backgroundColor: '#d0e7f2' },
+              headerShadowVisible: false,
+              headerLeft: () => null,
+              gestureEnabled: true,
+            }}
+          >
+            <Stack.Screen name="Acasă" component={Home} />
+            <Stack.Screen name="Rezultate" component={Results} />
+            <Stack.Screen name="Salvate" component={Saved} />
+          </Stack.Navigator>
+          <BottomBar
+            currentRoute={currentRoute}
+            onSelect={(name) => navigationRef.navigate(name)}
+          />
+        </View>
       </NavigationContainer>
     </QueryClientProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
