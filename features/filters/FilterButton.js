@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { Ionicons, MaterialIcons as Icon } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,6 +8,7 @@ import NoResults from '../../shared/components/NoResults';
 import { FILTER_ITEMS } from './data/filterItems';
 import { filterStyles } from './presentation/filter.styles';
 import { useFilterSelection } from './presentation/useFilterSelection';
+import { useFilterButtonAnimations } from './presentation/useFilterAnimations';
 
 export function FilterButton() {
   const selectRef = useRef(null);
@@ -16,37 +17,7 @@ export function FilterButton() {
 
   const filterCount = selectedFilterIds.length;
   const bottomSpacing = Math.max(insets.bottom, 16);
-  const [clearAnim] = useState(() => new Animated.Value(filterCount > 0 ? 1 : 0));
-  const [iconScale] = useState(() => new Animated.Value(1));
-  const [badgeScale] = useState(() => new Animated.Value(filterCount > 0 ? 1 : 0));
-  const prevCountRef = useRef(filterCount);
-
-  useEffect(() => {
-    Animated.timing(clearAnim, {
-      toValue: filterCount > 0 ? 1 : 0,
-      duration: 220,
-      useNativeDriver: false,
-    }).start();
-
-    if (prevCountRef.current !== filterCount) {
-      prevCountRef.current = filterCount;
-      Animated.sequence([
-        Animated.timing(iconScale, { toValue: 1.24, duration: 110, useNativeDriver: true }),
-        Animated.spring(iconScale, { toValue: 1, friction: 4, useNativeDriver: true }),
-      ]).start();
-      Animated.spring(badgeScale, {
-        toValue: filterCount > 0 ? 1 : 0,
-        friction: 5,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [clearAnim, iconScale, badgeScale, filterCount]);
-
-  const clearAnimatedStyle = {
-    width: clearAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 108] }),
-    marginRight: clearAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 10] }),
-    opacity: clearAnim,
-  };
+  const { clearStyle, iconStyle, badgeStyle } = useFilterButtonAnimations(filterCount);
 
   return (
     <>
@@ -55,17 +26,14 @@ export function FilterButton() {
         onPress={() => selectRef.current?._toggleSelector()}
         accessibilityLabel="Filtre"
       >
-        <Animated.View style={{ transform: [{ scale: iconScale }] }}>
+        <Animated.View style={iconStyle}>
           <Ionicons
             name={filterCount > 0 ? 'funnel' : 'funnel-outline'}
             size={18}
             color={COLORS.background_green}
           />
         </Animated.View>
-        <Animated.View
-          pointerEvents="none"
-          style={[filterStyles.badge, { transform: [{ scale: badgeScale }] }]}
-        >
+        <Animated.View pointerEvents="none" style={[filterStyles.badge, badgeStyle]}>
           <Text style={filterStyles.badgeText}>{filterCount}</Text>
         </Animated.View>
       </Pressable>
@@ -88,7 +56,7 @@ export function FilterButton() {
         parentChipText="Selectează"
         stickyFooterComponent={
           <View style={[filterStyles.footerRow, { paddingBottom: bottomSpacing }]}>
-            <Animated.View style={[filterStyles.clearWrapper, clearAnimatedStyle]}>
+            <Animated.View style={[filterStyles.clearWrapper, clearStyle]}>
               <Pressable
                 onPress={() => clearSelection(selectRef)}
                 disabled={filterCount === 0}
