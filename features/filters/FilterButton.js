@@ -12,7 +12,7 @@ import { useFilterSelection } from './presentation/useFilterSelection';
 export function FilterButton() {
   const selectRef = useRef(null);
   const insets = useSafeAreaInsets();
-  const { selectedFilterIds, applySelection } = useFilterSelection();
+  const { selectedFilterIds, applySelection, clearSelection } = useFilterSelection();
 
   const filterCount = selectedFilterIds.length;
   const bottomSpacing = Math.max(insets.bottom, 16);
@@ -49,9 +49,28 @@ export function FilterButton() {
         onSelectedItemsChange={applySelection}
         selectedItems={selectedFilterIds}
         modalWithSafeAreaView={true}
-        confirmText="Confirmă"
+        hideConfirm={true}
         searchPlaceholderText="Caută..."
         parentChipText="Selectează"
+        stickyFooterComponent={
+          <View style={[filterStyles.footerRow, { paddingBottom: bottomSpacing }]}>
+            {filterCount > 0 && (
+              <Pressable
+                onPress={() => clearSelection(selectRef)}
+                style={filterStyles.clearButton}
+              >
+                <Ionicons name="trash-outline" size={18} color={COLORS.background_green} />
+                <Text style={filterStyles.clearButtonText}>Șterge</Text>
+              </Pressable>
+            )}
+            <Pressable
+              onPress={() => selectRef.current?._submitSelection()}
+              style={filterStyles.confirmButton}
+            >
+              <Text style={filterStyles.confirmButtonText}>Confirmă</Text>
+            </Pressable>
+          </View>
+        }
         colors={{
           primary: COLORS.background_green,
           text: '#1f2937',

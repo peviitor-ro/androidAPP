@@ -13,5 +13,10 @@ export const useFilterSelection = () => {
     setRemote(remote);
   };
 
-  return { selectedFilterIds, applySelection };
+  const clearSelection = (selectRef) => {
+    selectRef?.current?._removeAllItems();
+    applySelection([]);
+  };
+
+  return { selectedFilterIds, applySelection, clearSelection };
 };
