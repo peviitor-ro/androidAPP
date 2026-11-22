@@ -59,31 +59,9 @@ const styles = StyleSheet.create({
 
 const searchStyles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
     marginTop: 16,
     marginBottom: 8,
-    gap: 0,
     zIndex: 1,
-  },
-  input: {
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  button: {
-    borderBottomLeftRadius: 0,
-    borderTopLeftRadius: 0,
-    height: 40,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '80%',
-    height: 40,
-  },
-  icon: {
-    position: 'absolute',
-    left: 10,
   },
   dropdown: {
     flex: 0,
