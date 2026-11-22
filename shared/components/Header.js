@@ -1,10 +1,10 @@
 import { View, StyleSheet, Platform, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Logo from '../../assets/svg/Logo';
+import { useTabPager } from '../../app/navigation/TabPagerContext';
 
 export default function Header() {
-  const navigation = useNavigation();
+  const { navigateTo } = useTabPager();
   const insets = useSafeAreaInsets();
 
   return (
@@ -14,7 +14,7 @@ export default function Header() {
         Platform.OS === 'ios' ? { paddingTop: insets.top + 8 } : null,
       ]}
     >
-      <Pressable onPress={() => navigation.navigate('Acasă')}>
+      <Pressable onPress={() => navigateTo('Acasă')}>
         <Logo />
       </Pressable>
     </View>
