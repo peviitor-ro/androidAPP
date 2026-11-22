@@ -1,3 +1,4 @@
+import { LayoutAnimation } from 'react-native';
 import useJobStore from '../../job_search/data/jobs.state';
 import { extractFilters } from '../domain/extractFilters';
 
@@ -6,6 +7,7 @@ export const useFilterSelection = () => {
     useJobStore();
 
   const applySelection = (nextIds) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setSelectedFilterIds(nextIds);
     const { cities, counties, remote } = extractFilters(nextIds);
     setCities(cities);

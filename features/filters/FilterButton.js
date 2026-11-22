@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, Pressable, Text, View } from 'react-native';
 import { Ionicons, MaterialIcons as Icon } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
@@ -16,24 +16,58 @@ export function FilterButton() {
 
   const filterCount = selectedFilterIds.length;
   const bottomSpacing = Math.max(insets.bottom, 16);
+  const [clearAnim] = useState(() => new Animated.Value(filterCount > 0 ? 1 : 0));
+  const [iconScale] = useState(() => new Animated.Value(1));
+  const [badgeScale] = useState(() => new Animated.Value(filterCount > 0 ? 1 : 0));
+  const prevCountRef = useRef(filterCount);
+
+  useEffect(() => {
+    Animated.timing(clearAnim, {
+      toValue: filterCount > 0 ? 1 : 0,
+      duration: 220,
+      useNativeDriver: false,
+    }).start();
+
+    if (prevCountRef.current !== filterCount) {
+      prevCountRef.current = filterCount;
+      Animated.sequence([
+        Animated.timing(iconScale, { toValue: 1.24, duration: 110, useNativeDriver: true }),
+        Animated.spring(iconScale, { toValue: 1, friction: 4, useNativeDriver: true }),
+      ]).start();
+      Animated.spring(badgeScale, {
+        toValue: filterCount > 0 ? 1 : 0,
+        friction: 5,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [clearAnim, iconScale, badgeScale, filterCount]);
+
+  const clearAnimatedStyle = {
+    width: clearAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 108] }),
+    marginRight: clearAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 10] }),
+    opacity: clearAnim,
+  };
 
   return (
     <>
       <Pressable
-        style={filterStyles.filterButton}
+        style={[filterStyles.filterButton, filterCount > 0 && filterStyles.filterButtonActive]}
         onPress={() => selectRef.current?._toggleSelector()}
         accessibilityLabel="Filtre"
       >
-        <Ionicons
-          name={filterCount > 0 ? 'funnel' : 'funnel-outline'}
-          size={18}
-          color={COLORS.background_green}
-        />
-        {filterCount > 0 && (
-          <View style={filterStyles.badge}>
-            <Text style={filterStyles.badgeText}>{filterCount}</Text>
-          </View>
-        )}
+        <Animated.View style={{ transform: [{ scale: iconScale }] }}>
+          <Ionicons
+            name={filterCount > 0 ? 'funnel' : 'funnel-outline'}
+            size={18}
+            color={COLORS.background_green}
+          />
+        </Animated.View>
+        <Animated.View
+          pointerEvents="none"
+          style={[filterStyles.badge, { transform: [{ scale: badgeScale }] }]}
+        >
+          <Text style={filterStyles.badgeText}>{filterCount}</Text>
+        </Animated.View>
       </Pressable>
 
       <SectionedMultiSelect
@@ -54,15 +88,18 @@ export function FilterButton() {
         parentChipText="Selectează"
         stickyFooterComponent={
           <View style={[filterStyles.footerRow, { paddingBottom: bottomSpacing }]}>
-            {filterCount > 0 && (
+            <Animated.View style={[filterStyles.clearWrapper, clearAnimatedStyle]}>
               <Pressable
                 onPress={() => clearSelection(selectRef)}
+                disabled={filterCount === 0}
                 style={filterStyles.clearButton}
               >
                 <Ionicons name="trash-outline" size={18} color={COLORS.background_green} />
-                <Text style={filterStyles.clearButtonText}>Șterge</Text>
+                <Text numberOfLines={1} style={filterStyles.clearButtonText}>
+                  Șterge
+                </Text>
               </Pressable>
-            )}
+            </Animated.View>
             <Pressable
               onPress={() => selectRef.current?._submitSelection()}
               style={filterStyles.confirmButton}

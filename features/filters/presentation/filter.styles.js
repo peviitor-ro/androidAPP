@@ -4,6 +4,7 @@ import COLORS from '../../../core/theme/COLORS';
 export const filterStyles = StyleSheet.create({
   wrapper: {
     width: '100%',
+    overflow: 'hidden',
   },
   pillsRow: {
     flexDirection: 'row',
@@ -42,6 +43,11 @@ export const filterStyles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 6,
   },
+  filterButtonActive: {
+    backgroundColor: '#dff0ee',
+    borderWidth: 1,
+    borderColor: '#b7dad6',
+  },
   badge: {
     position: 'absolute',
     bottom: 2,
@@ -70,9 +76,11 @@ export const filterStyles = StyleSheet.create({
   },
   footerRow: {
     flexDirection: 'row',
-    gap: 10,
     paddingHorizontal: 16,
     paddingTop: 10,
+  },
+  clearWrapper: {
+    overflow: 'hidden',
   },
   clearButton: {
     flexDirection: 'row',
@@ -80,7 +88,7 @@ export const filterStyles = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
     backgroundColor: '#eef6f5',
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 14,
     borderRadius: 12,
   },
