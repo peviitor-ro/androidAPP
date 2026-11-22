@@ -63,16 +63,67 @@ export const filterStyles = StyleSheet.create({
   noResults: {
     height: '100%',
   },
+  modalContainer: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: COLORS.white,
+  },
+  searchBar: {
+    backgroundColor: '#eef6f5',
+    borderRadius: 12,
+    margin: 12,
+    paddingHorizontal: 10,
+  },
+  modalItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  modalSubItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginHorizontal: 8,
+    marginVertical: 2,
+  },
+  modalSelectedSubItem: {
+    backgroundColor: '#eef6f5',
+  },
+  modalSeparator: {
+    backgroundColor: '#e5eceb',
+  },
   modalButton: {
     backgroundColor: COLORS.background_green,
+    borderRadius: 12,
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 14,
   },
   modalCancel: {
     backgroundColor: COLORS.border_grey,
+    borderRadius: 12,
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 14,
+  },
+  confirmText: {
+    fontSize: 16,
+    fontWeight: '700',
   },
   searchTextInput: {
     color: COLORS.background_green,
+    fontSize: 15,
   },
   itemText: {
     color: COLORS.background_green,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  subItemText: {
+    color: '#374151',
+    fontSize: 15,
+  },
+  selectedSubItemText: {
+    color: COLORS.background_green,
+    fontWeight: '600',
   },
 });

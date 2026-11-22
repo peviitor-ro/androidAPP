@@ -52,16 +52,30 @@ export function FilterButton() {
         confirmText="Confirmă"
         searchPlaceholderText="Caută..."
         parentChipText="Selectează"
+        colors={{
+          primary: COLORS.background_green,
+          text: '#1f2937',
+          subText: '#374151',
+        }}
         noResultsComponent={
           <View style={filterStyles.noResults}>
             <NoResults />
           </View>
         }
         styles={{
-          button: [filterStyles.modalButton, { paddingTop: 12, paddingBottom: bottomSpacing }],
-          cancelButton: [filterStyles.modalCancel, { paddingTop: 12, paddingBottom: bottomSpacing }],
+          container: filterStyles.modalContainer,
+          searchBar: filterStyles.searchBar,
           searchTextInput: filterStyles.searchTextInput,
+          item: filterStyles.modalItem,
           itemText: filterStyles.itemText,
+          subItem: filterStyles.modalSubItem,
+          selectedSubItem: filterStyles.modalSelectedSubItem,
+          subItemText: filterStyles.subItemText,
+          selectedSubItemText: filterStyles.selectedSubItemText,
+          separator: filterStyles.modalSeparator,
+          button: [filterStyles.modalButton, { marginBottom: bottomSpacing }],
+          cancelButton: [filterStyles.modalCancel, { marginBottom: bottomSpacing }],
+          confirmText: filterStyles.confirmText,
         }}
       />
     </>
