@@ -9,6 +9,8 @@ const TabPagerContext = createContext({
   scrollRef: null,
   scrollX: new Animated.Value(0),
   width: 0,
+  pagerScrollEnabled: true,
+  setPagerScrollEnabled: () => {},
   onMomentumScrollEnd: () => {},
 });
 
@@ -17,6 +19,7 @@ export function TabPagerProvider({ children }) {
   const scrollRef = useRef(null);
   const [scrollX] = useState(() => new Animated.Value(0));
   const [currentRoute, setCurrentRoute] = useState('Acasă');
+  const [pagerScrollEnabled, setPagerScrollEnabled] = useState(true);
 
   const navigateTo = useCallback(
     (name) => {
@@ -40,7 +43,16 @@ export function TabPagerProvider({ children }) {
 
   return (
     <TabPagerContext.Provider
-      value={{ currentRoute, navigateTo, scrollRef, scrollX, width, onMomentumScrollEnd }}
+      value={{
+        currentRoute,
+        navigateTo,
+        scrollRef,
+        scrollX,
+        width,
+        pagerScrollEnabled,
+        setPagerScrollEnabled,
+        onMomentumScrollEnd,
+      }}
     >
       {children}
     </TabPagerContext.Provider>

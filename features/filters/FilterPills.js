@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Animated, ScrollView } from 'react-native';
+import { useTabPager } from '../../app/navigation/TabPagerContext';
 import { useAnimatedList } from '../../core/animations/useAnimatedList';
 import { useToggleAnimation } from '../../core/animations/useToggleAnimation';
 import { splitFilterChips } from './domain/extractFilters';
@@ -9,6 +10,7 @@ import { useFilterSelection } from './presentation/useFilterSelection';
 
 export function FilterPills({ style }) {
   const { selectedFilterIds, applySelection } = useFilterSelection();
+  const { setPagerScrollEnabled } = useTabPager();
 
   const activeChips = useMemo(() => {
     const { jobTypeChips, cityChips } = splitFilterChips(selectedFilterIds);
@@ -34,8 +36,13 @@ export function FilterPills({ style }) {
     <Animated.View style={[filterStyles.wrapper, style, barStyle]}>
       <ScrollView
         horizontal
+        nestedScrollEnabled={true}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={filterStyles.pillsRow}
+        onTouchStart={() => setPagerScrollEnabled(false)}
+        onTouchEnd={() => setPagerScrollEnabled(true)}
+        onTouchCancel={() => setPagerScrollEnabled(true)}
+        onScrollEndDrag={() => setPagerScrollEnabled(true)}
       >
         {renderedItems.map((chip) => (
           <FilterChip

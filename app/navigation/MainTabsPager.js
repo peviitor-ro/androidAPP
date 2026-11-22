@@ -10,7 +10,14 @@ const SCREENS = [Home, Results, Saved];
 
 export function MainTabsPager() {
   const { width } = useWindowDimensions();
-  const { currentRoute, navigateTo, scrollRef, scrollX, onMomentumScrollEnd } = useTabPager();
+  const {
+    currentRoute,
+    navigateTo,
+    scrollRef,
+    scrollX,
+    pagerScrollEnabled,
+    onMomentumScrollEnd,
+  } = useTabPager();
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -27,6 +34,7 @@ export function MainTabsPager() {
         ref={scrollRef}
         horizontal
         pagingEnabled
+        scrollEnabled={pagerScrollEnabled}
         showsHorizontalScrollIndicator={false}
         bounces={false}
         overScrollMode="never"
