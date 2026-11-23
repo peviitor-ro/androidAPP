@@ -3,16 +3,18 @@ import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CONSTANTS from '../services/CONSTANTS';
 import axios from 'axios';
+import { useMyJobsController } from '../my_jobs/MyJobsController';
 
 export const JobContext = createContext();
 
 export const JobProvider = ({ children }) => {
   const [savedJobs, setJobs] = useState([]);
+  const { onJobSaved, onJobRemoved } = useMyJobsController();
 
   // încarcă joburile la start
   useEffect(() => {
     const loadJobs = async () => {
-      const data = await AsyncStorage.getItem('jobs') 
+      const data = await AsyncStorage.getItem('jobs');
       setJobs(data ? JSON.parse(data) : []);
     };
     loadJobs();
@@ -24,37 +26,40 @@ export const JobProvider = ({ children }) => {
   };
 
   const addJob = async (job) => {
+    onJobSaved(job);
     const newJobs = [...savedJobs, job];
     await saveJobs(newJobs);
   };
 
   const deleteJob = async (id) => {
+    const jobToDelete = savedJobs.find((j) => j.id === id);
+    if (jobToDelete) onJobRemoved(jobToDelete);
     const newJobs = savedJobs.filter((j) => j.id !== id);
     await saveJobs(newJobs);
   };
 
-const syncWithServer = async () => {
-  try {
-    if (savedJobs.length === 0) return;
+  const syncWithServer = async () => {
+    try {
+      if (savedJobs.length === 0) return;
 
-    const response = await axios.post(`${CONSTANTS.url}check-saved/`, {
-      ids: savedJobs.map((job) => job.id),
-    });
+      const response = await axios.post(`${CONSTANTS.url}check-saved/`, {
+        ids: savedJobs.map((job) => job.id),
+      });
 
-    const validIds = response.data.existing_job_ids;
+      const validIds = response.data.existing_job_ids;
 
-    const newJobs = savedJobs.filter((job) => validIds.includes(job.id));
+      const newJobs = savedJobs.filter((job) => validIds.includes(job.id));
 
-    // vezi ce se șterge
-    const removedJobs = savedJobs.filter((job) => !validIds.includes(job.id));
+      // vezi ce se șterge
+      const removedJobs = savedJobs.filter((job) => !validIds.includes(job.id));
 
-    if (newJobs.length !== savedJobs.length) {
-      await saveJobs(newJobs); // aici doar rescrii lista cu ce rămâne
+      if (newJobs.length !== savedJobs.length) {
+        await saveJobs(newJobs); // aici doar rescrii lista cu ce rămâne
+      }
+    } catch (error) {
+      console.error('Error syncing jobs with server:', error);
     }
-  } catch (error) {
-    console.error('Error syncing jobs with server:', error);
-  }
-};
+  };
 
   useEffect(() => {
     syncWithServer();

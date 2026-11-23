@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import Search from '../components/Search';
+import { FilterPills } from '../features/filters/FilterPills';
 import COLORS from '../constants/COLORS';
 import Card from '../components/ContainerCard';
 import Background from '../components/Background';
@@ -9,6 +10,7 @@ export default function Results() {
     <Background>
       <View style={styles.container}>
         <Search style={searchStyles} />
+        <FilterPills style={styles.filterPills} />
         <Card />
       </View>
     </Background>
@@ -50,34 +52,16 @@ const styles = StyleSheet.create({
     height: 10,
     color: COLORS.background_green,
   },
+  filterPills: {
+    marginBottom: 12,
+  },
 });
 
 const searchStyles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-    gap: 0,
+    marginTop: 16,
+    marginBottom: 8,
     zIndex: 1,
-  },
-  input: {
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  button: {
-    borderBottomLeftRadius: 0,
-    borderTopLeftRadius: 0,
-    height: 40,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '80%',
-    height: 40,
-  },
-  icon: {
-    position: 'absolute',
-    left: 10,
   },
   dropdown: {
     flex: 0,

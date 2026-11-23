@@ -7,7 +7,6 @@ import { Ionicons } from '@expo/vector-icons';
 import Home from '../screens/Home';
 import Results from '../screens/Results';
 import Header from '../components/Header';
-import Filter from '../components/Filters';
 import Saved from '../screens/Saved';
 
 const Stack = createNativeStackNavigator();
@@ -18,7 +17,11 @@ function BottomTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerShown: false,
+        headerShown: true,
+        headerTitle: () => <Header />,
+        headerTitleAlign: 'center',
+        headerStyle: { backgroundColor: '#d0e7f2' },
+        headerShadowVisible: false,
         tabBarStyle: {
           backgroundColor: '#f6f0ec',
         },
@@ -30,8 +33,6 @@ function BottomTabs() {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Rezultate') {
             iconName = focused ? 'list' : 'list-outline';
-          } else if (route.name === 'Filtre') {
-            iconName = focused ? 'filter' : 'filter-outline';
           } else if (route.name === 'Salvate') {
             iconName = focused ? 'heart' : 'heart-outline';
           }
@@ -44,7 +45,6 @@ function BottomTabs() {
     >
       <Tab.Screen name="Acasă" component={Home} />
       <Tab.Screen name="Rezultate" component={Results} />
-      <Tab.Screen name="Filtre" component={Filter} />
       <Tab.Screen name="Salvate" component={Saved} />
     </Tab.Navigator>
   );
@@ -54,7 +54,6 @@ export default function AppNavigator() {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        <Header />
         <Stack.Navigator
           initialRouteName="Acasă"
           screenOptions={{

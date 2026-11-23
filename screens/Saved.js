@@ -1,52 +1,58 @@
 import React from 'react';
-
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { JobContext } from '../context/JobContext';
 import Background from '../components/Background';
-import Card from '../components/Card';
+import JobList from '../components/JobList';
 import COLORS from '../constants/COLORS';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  text: {
-    color: COLORS.background_green,
-    fontSize: 18,
-  },
-  scrollView: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 100,
-  },
-});
+import { useMyJobsController } from '../my_jobs/MyJobsController';
 
 export default function Saved() {
   const { savedJobs } = React.useContext(JobContext);
+  const { recommendedJobs } = useMyJobsController();
 
   return (
     <Background>
-      <View style={styles.container}>
-        {savedJobs.length === 0 ? (
-          <Text style={styles.text}>Niciun anunț salvat momentan.</Text>
-        ) : (
-          <ScrollView
-            contentContainerStyle={styles.scrollView}
-            scrollEnabled={true}
-            nestedScrollEnabled={true}
-          >
-            {savedJobs.map((job, index) => (
-              <Card key={index} job={job} />
-            ))}
-          </ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.section}>
+          <Text style={styles.headerTitle}>Joburi salvate</Text>
+          {savedJobs.length === 0 ? (
+            <Text style={styles.emptyText}>Niciun anunț salvat momentan.</Text>
+          ) : (
+            <JobList data={savedJobs} scrollEnabled={false} />
+          )}
+        </View>
+
+        {recommendedJobs.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.headerTitle}>Recomandări de joburi</Text>
+            <JobList data={recommendedJobs} scrollEnabled={false} />
+          </View>
         )}
-      </View>
+      </ScrollView>
     </Background>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollContent: {
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+  },
+  section: {
+    width: '100%',
+    marginBottom: 20,
+  },
+  emptyText: {
+    color: COLORS.background_green,
+    fontSize: 18,
+    textAlign: 'center',
+    marginVertical: 20,
+  },
+  headerTitle: {
+    color: COLORS.background_green,
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    paddingHorizontal: 8,
+  },
+});
