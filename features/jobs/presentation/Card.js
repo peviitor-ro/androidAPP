@@ -1,4 +1,4 @@
-import { Alert, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { JobContext } from '../data/JobContext';
 import * as WebBrowser from 'expo-web-browser';
 import COLORS from '../../../core/theme/COLORS';
@@ -6,6 +6,7 @@ import Map from '../../../assets/svg/Map';
 import Heart from '../../../assets/svg/Heart';
 import Delete from '../../../assets/svg/Delete';
 import CustomButton from '../../../core/components/Buttons';
+import { useToast } from '../../../core/components/Toast';
 import React, { useContext } from 'react';
 
 const styles = StyleSheet.create({
@@ -167,6 +168,7 @@ function formatSalary(job) {
 
 export default function Card({ job }) {
   const { savedJobs, addJob, deleteJob } = useContext(JobContext);
+  const { showToast } = useToast();
 
   const { id, company_name, job_title, city, county, remote, job_link } =
     job;
@@ -177,11 +179,11 @@ export default function Card({ job }) {
   const handleSave = () => {
     if (isSaved) {
       deleteJob(id);
-      Alert.alert('Anunțul a fost șters din favorite!');
-    } else {
-      addJob(job);
-      Alert.alert('Anunțul a fost salvat cu succes!');
+      showToast('Anunțul a fost șters din favorite!');
+      return;
     }
+    addJob(job);
+    showToast('Anunțul a fost salvat cu succes!');
   };
 
   return (
