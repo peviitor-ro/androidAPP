@@ -36,6 +36,7 @@ export function MainTabsPager() {
         pagingEnabled
         scrollEnabled={pagerScrollEnabled}
         showsHorizontalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
         bounces={false}
         overScrollMode="never"
         scrollEventThrottle={16}

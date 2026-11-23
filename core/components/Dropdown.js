@@ -1,4 +1,5 @@
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import COLORS from '../theme/COLORS';
 
 const defaultStyle = StyleSheet.create({
@@ -33,13 +34,13 @@ export default function Dropdown({ ...props }) {
 
   return (
     <ScrollView
-      contentContainerStyle={defaultStyle.conntentStyle}
+      contentContainerStyle={[defaultStyle.conntentStyle, style.content]}
       style={[defaultStyle.dropdown, style.dropdown]}
       scrollEnabled={true}
       nestedScrollEnabled={true}
+      keyboardShouldPersistTaps="handled"
       onScroll={onScroll}
     >
-      
       {children}
     </ScrollView>
   );

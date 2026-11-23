@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, TextInput } from 'react-native';
 import { useState, useEffect } from 'react';
 import { total } from './data/landing.service';
 import Background from '../../core/components/Background';
@@ -14,11 +14,19 @@ export default function Home() {
     total().then((res) => setJobs(res.total));
   }, []);
 
+  const handleTouchOutside = () => {
+    const focusedInput = TextInput.State.currentlyFocusedInput?.();
+    if (focusedInput) focusedInput.blur();
+  };
+
   return (
     <Background>
       <ScrollView
         contentContainerStyle={styles.container}
         style={styles.scrollView}
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled={true}
+        onTouchStart={handleTouchOutside}
       >
         <About jobs={jobs} />
         <View style={styles.searchGroup}>

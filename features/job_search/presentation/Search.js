@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  Text,
-  ActivityIndicator,
-  Pressable,
-} from 'react-native';
+import { View, TextInput, ActivityIndicator } from 'react-native';
 import { useJobsInfiniteQuery } from '../../landing/data/landing.queries';
-import { useNavigation } from '@react-navigation/native';
+import { useTabPager } from '../../../app/navigation/TabPagerContext';
 import useJobStore from '../data/jobs.state';
 import CustomButton from '../../../core/components/Buttons';
 import SearchIcon from '../../../assets/svg/SearchIcon';
-import Dropdown from '../../../core/components/Dropdown';
 import { FilterButton } from '../../filters/FilterButton';
 import COLORS from '../../../core/theme/COLORS';
+import { SearchSuggestions } from './SearchSuggestions';
+import { searchStyles as defaultStyles } from './Search.styles';
+
+const isCloseToBottom = ({
+  layoutMeasurement,
+  contentOffset,
+  contentSize,
+}) => {
+  const paddingToBottom = 20;
+  return (
+    layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - paddingToBottom
+  );
+};
 
 export default function Search({ ...props }) {
   const style = props.style || {};
 
-  const navigation = useNavigation();
+  const { navigateTo } = useTabPager();
   const { jobs, search, setSearch, setJobs, cities, counties, remote } =
     useJobStore();
   const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -27,10 +33,7 @@ export default function Search({ ...props }) {
 
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-
-  const handleOnChange = (text) => {
-    setSearch(text);
-  };
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     switch (true) {
@@ -56,22 +59,18 @@ export default function Search({ ...props }) {
     }
   };
 
-  const isCloseToBottom = ({
-    layoutMeasurement,
-    contentOffset,
-    contentSize,
-  }) => {
-    const paddingToBottom = 20;
-    return (
-      layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom
-    );
+  const handleSelectSuggestion = (job) => {
+    setSearch(job);
+    navigateTo('Rezultate');
   };
 
   const uniqueJobs = Array.from(new Set(jobs.map((job) => job.job_title)));
 
   return (
-    <View style={[defaultStyles.container, style.container]}>
+    <View
+      style={[defaultStyles.container, style.container]}
+      onTouchStart={(e) => e.stopPropagation()}
+    >
       <View style={[defaultStyles.searchBox, style.searchBox]}>
         <SearchIcon style={[defaultStyles.icon, style.icon]} />
         <TextInput
@@ -79,7 +78,9 @@ export default function Search({ ...props }) {
           placeholder="Caută un loc de muncă"
           placeholderTextColor="#7a8b8b"
           defaultValue={search}
-          onChangeText={handleOnChange}
+          onChangeText={setSearch}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
         <CustomButton
           style={{
@@ -87,7 +88,7 @@ export default function Search({ ...props }) {
             buttonText: [defaultStyles.searchButtonText, style.buttonText],
           }}
           title="Caută"
-          onPress={() => navigation.navigate('Rezultate')}
+          onPress={() => navigateTo('Rezultate')}
         />
         <FilterButton />
       </View>
@@ -98,112 +99,19 @@ export default function Search({ ...props }) {
           style={[defaultStyles.indicator, style.indicator]}
         />
       ) : (
-        <Dropdown
-          visible={visible}
-          style={{ dropdown: [defaultStyles.dropdown, style.dropdown] }}
+        <SearchSuggestions
+          visible={visible && isFocused}
+          items={uniqueJobs}
+          isFetchingNextPage={isFetchingNextPage}
+          onSelect={handleSelectSuggestion}
           onScroll={handleScroll}
-        >
-          {uniqueJobs.map((job, index) => (
-            <Pressable
-              key={index}
-              onPress={() => {
-                setSearch(job);
-                navigation.navigate('Rezultate');
-              }}
-            >
-              <View
-                style={{
-                  padding: 10,
-                  backgroundColor:
-                    index % 2 === 0 ? COLORS.white : COLORS.border_grey,
-                }}
-              >
-                <Text
-                  style={[
-                    defaultStyles.dropdownText,
-                    style.dropdownText,
-                    {
-                      color:
-                        index % 2 === 0
-                          ? COLORS.background_green
-                          : COLORS.white,
-                    },
-                  ]}
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                >
-                  {job}
-                </Text>
-              </View>
-            </Pressable>
-          ))}
-          {isFetchingNextPage ? (
-            <ActivityIndicator
-              size="small"
-              color={COLORS.background_green}
-              style={{ marginBottom: 20 }}
-            />
-          ) : null}
-        </Dropdown>
+          style={{
+            dropdown: [defaultStyles.dropdown, style.dropdown],
+            dropdownContent: defaultStyles.dropdownContent,
+            dropdownText: style.dropdownText,
+          }}
+        />
       )}
     </View>
   );
 }
-
-const defaultStyles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    marginHorizontal: 20,
-  },
-  searchBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#e2ecea',
-    paddingLeft: 14,
-    paddingRight: 6,
-    paddingVertical: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  input: {
-    flex: 1,
-    height: 40,
-    paddingHorizontal: 8,
-    paddingVertical: 0,
-    fontSize: 15,
-    color: COLORS.background_green,
-    textAlignVertical: 'center',
-  },
-  icon: {
-    marginRight: 2,
-  },
-  searchButton: {
-    borderRadius: 12,
-    paddingHorizontal: 18,
-    paddingVertical: 9,
-  },
-  searchButtonText: {
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  dropdown: {
-    zIndex: 1,
-    paddingBottom: 30,
-  },
-  dropdownText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  indicator: {
-    marginTop: 10,
-    position: 'absolute',
-    left: '50%',
-    top: '100%',
-  },
-});
