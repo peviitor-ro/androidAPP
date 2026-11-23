@@ -1,0 +1,171 @@
+import { StyleSheet } from 'react-native';
+import COLORS from '../../../core/theme/COLORS';
+
+export const filterStyles = StyleSheet.create({
+  wrapper: {
+    width: '100%',
+    overflow: 'hidden',
+  },
+  pillsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 2,
+    gap: 8,
+  },
+  chipPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: COLORS.white,
+    borderColor: '#dce6e5',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  chipText: {
+    color: COLORS.background_green,
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  filterButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: '#eef6f5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 6,
+  },
+  filterButtonActive: {
+    backgroundColor: '#dff0ee',
+    borderWidth: 1,
+    borderColor: '#b7dad6',
+  },
+  badge: {
+    position: 'absolute',
+    bottom: 2,
+    right: 2,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: COLORS.background_green,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+  },
+  badgeText: {
+    color: COLORS.white,
+    fontSize: 10,
+    fontWeight: '700',
+    includeFontPadding: false,
+  },
+  noResults: {
+    height: '100%',
+  },
+  modalContainer: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: COLORS.white,
+  },
+  footerRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingTop: 10,
+  },
+  clearWrapper: {
+    overflow: 'hidden',
+  },
+  clearButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: '#eef6f5',
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+  clearButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: COLORS.background_green,
+  },
+  confirmButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.background_green,
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+  confirmButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.white,
+  },
+  searchBar: {
+    backgroundColor: '#eef6f5',
+    borderRadius: 12,
+    margin: 12,
+    paddingHorizontal: 10,
+  },
+  modalItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  modalSubItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginHorizontal: 8,
+    marginVertical: 2,
+  },
+  modalSelectedSubItem: {
+    backgroundColor: '#eef6f5',
+  },
+  modalSeparator: {
+    backgroundColor: '#e5eceb',
+  },
+  modalButton: {
+    backgroundColor: COLORS.background_green,
+    borderRadius: 12,
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 14,
+  },
+  modalCancel: {
+    backgroundColor: COLORS.border_grey,
+    borderRadius: 12,
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 14,
+  },
+  confirmText: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  searchTextInput: {
+    color: COLORS.background_green,
+    fontSize: 15,
+  },
+  itemText: {
+    color: COLORS.background_green,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  subItemText: {
+    color: '#374151',
+    fontSize: 15,
+  },
+  selectedSubItemText: {
+    color: COLORS.background_green,
+    fontWeight: '600',
+  },
+});
