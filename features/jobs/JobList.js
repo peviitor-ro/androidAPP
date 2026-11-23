@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import Card from './presentation/Card';
 
 const keyExtractor = (job) => String(job.id);

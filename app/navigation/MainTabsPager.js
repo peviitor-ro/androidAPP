@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { View, Animated, StyleSheet, BackHandler, useWindowDimensions } from 'react-native';
+import { ScrollView as GestureScrollView } from 'react-native-gesture-handler';
 import Home from '../../features/landing/Home';
 import Results from '../../features/job_search/Results';
 import Saved from '../../features/jobs/Saved';
@@ -7,6 +8,7 @@ import { BottomBar } from '../../shared/components/BottomBar';
 import { TAB_ROUTES, useTabPager } from './TabPagerContext';
 
 const SCREENS = [Home, Results, Saved];
+const AnimatedGestureScrollView = Animated.createAnimatedComponent(GestureScrollView);
 
 export function MainTabsPager() {
   const { width } = useWindowDimensions();
@@ -28,13 +30,17 @@ export function MainTabsPager() {
     return () => sub.remove();
   }, [currentRoute, navigateTo]);
 
+  const hasVerticalScroll = currentRoute !== 'Acasă';
+
   return (
     <View style={styles.container}>
-      <Animated.ScrollView
+      <AnimatedGestureScrollView
         ref={scrollRef}
         horizontal
         pagingEnabled
         scrollEnabled={pagerScrollEnabled}
+        activeOffsetX={hasVerticalScroll ? [-50, 50] : [-20, 20]}
+        failOffsetY={hasVerticalScroll ? [-5, 5] : [-40, 40]}
         showsHorizontalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         bounces={false}
@@ -52,7 +58,7 @@ export function MainTabsPager() {
             <Screen />
           </View>
         ))}
-      </Animated.ScrollView>
+      </AnimatedGestureScrollView>
       <BottomBar
         currentRoute={currentRoute}
         onSelect={navigateTo}
